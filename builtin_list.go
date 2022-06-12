@@ -75,9 +75,9 @@ func builtinsList(s *Scope) {
 	}
 	s.Api["list-len"] = func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "list-add", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "list-len", 1, 0)
 		}
-		list, err := EvalCast[*builtinList]("list-add", s, args[0], nil)
+		list, err := EvalCast[*builtinList]("list-len", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}

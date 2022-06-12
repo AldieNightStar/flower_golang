@@ -19,6 +19,7 @@ var builtins = (func() *Scope {
 	builtinDict(scope)
 	builtinKeyVal(scope)
 	builtinsList(scope)
+	builtinString(scope)
 
 	// Return command
 	scope.Api["return"] = func(s *Scope, args []*golisper.Value) (any, error) {

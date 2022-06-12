@@ -102,3 +102,31 @@ func (it *builtinArrayIteration) Iterate() (any, error) {
 	it.pos += 1
 	return res, nil
 }
+
+// ====================================
+// ====================================
+
+// Iteration() builtinIteration
+// Iterate() (any, error)
+
+type builtinStringIterator struct {
+	str string
+}
+
+func (it *builtinStringIterator) Iteration() builtinIteration {
+	return &buitlinStringIteration{it, 0}
+}
+
+type buitlinStringIteration struct {
+	iter *builtinStringIterator
+	pos  int
+}
+
+func (it *buitlinStringIteration) Iterate() (any, error) {
+	if it.pos >= len(it.iter.str) {
+		return nil, nil
+	}
+	res := it.iter.str[it.pos : it.pos+1]
+	it.pos += 1
+	return res, nil
+}

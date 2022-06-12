@@ -130,3 +130,42 @@
     (print i)
 ))
 ```
+* Strings
+```lisp
+; Iterate over each symbol
+; Could be used with (iterate ...) command
+(str-iterate "Hello!")
+
+; Join list of strings with "+" symbol. You can set whatever you want
+(str-join
+    (list of("Hi", "Jack", "Mary"))
+    "+"
+)
+
+; Concatenation
+(concat "A" "B" "C")
+
+; Turn everything to string
+(str obj)
+
+; Get substring from->to
+(str-sub "***Ihor*****" 3 7) ; Will return "Ihor"
+
+; Split string by separator
+; Will return list of splitted strings by symbol
+(str-split "a,b,c" ",") ; will return list["a" "b" "c"]
+
+; Split string by separator with limit
+(str-split "a,b,c" "," 2) ; will return list["a" "b,c"]
+
+; Finds first index of "b" in "abc"
+; will return -1 if not found
+(str-find "abc" "b") ; will return 1
+
+; Get character at some position
+; Will return "" if out of bounds
+(str-at "abc" 1) ; will return "b"
+
+; Replace substring to another
+(str-rep "Ihaoer" "aoe" "o") ; will return "Ihor"
+```
