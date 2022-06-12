@@ -1,9 +1,5 @@
-((set b (do
-    (print name)
-    (print age)
-    (return 1)
+(iterate (range 0 1000) i (do
+    ; Break if number is more than 100
+    (if (greater i 100) (do (break)))
+    (print i)
 ))
-(print (call b
-    (with "name" "Ihor")
-    (with "age" 18)
-)))

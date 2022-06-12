@@ -66,7 +66,39 @@ func (it *builtinRangeIteration) Iterate() (any, error) {
 	if it.count <= it.iter.max {
 		res := it.count
 		it.count += 1
-		return res, nil
+		return float64(res), nil
 	}
 	return nil, nil
+}
+
+// ====================================
+// ====================================
+
+type builtinDictKeysIterator struct {
+	dict *builtinDictStruct
+}
+
+func (it *builtinDictKeysIterator) Iteration() builtinIteration {
+	arr := make([]any, 0, 32)
+	for k, _ := range it.dict.m {
+		arr = append(arr, k)
+	}
+	return &builtinArrayIteration{arr, 0}
+}
+
+// ====================================
+// ====================================
+
+type builtinArrayIteration struct {
+	arr []any
+	pos int
+}
+
+func (it *builtinArrayIteration) Iterate() (any, error) {
+	if it.pos >= len(it.arr) {
+		return nil, nil
+	}
+	res := it.arr[it.pos]
+	it.pos += 1
+	return res, nil
 }
