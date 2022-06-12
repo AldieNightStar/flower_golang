@@ -54,14 +54,17 @@
 ; Create dictionary
 (set profile
     (dict
-        (with name "Ihor")
-        (with age 18)
-        (with city "London")
+        (with "name" "Ihor")
+        (with "age"  18)
+        (with "city" "London")
     )
 )
 
 ; Get value from dictionary
 (print (dict-get profile "name"))
+
+; Set value to the dictionary
+(dict-set profile "career" "programmer")
 
 ; Iterate over dictionary keys
 (iterate (dict-keys profile) key (do

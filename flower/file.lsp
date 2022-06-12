@@ -1,5 +1,13 @@
-(iterate (range 0 1000) i (do
-    ; Break if number is more than 100
-    (if (greater i 100) (do (break)))
-    (print i)
-))
+(set profile
+    (dict
+        (with "name" "Ihor")
+        (with "age" 18)
+        (with "city" "London")
+    )
+)
+
+(print (dict-get profile "name"))
+
+(dict-set profile "career" "programmer")
+
+(print (dict-get profile "career"))
