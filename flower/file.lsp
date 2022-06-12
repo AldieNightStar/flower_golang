@@ -1,13 +1,21 @@
-(set profile
-    (dict
-        (with "name" "Ihor")
-        (with "age" 18)
-        (with "city" "London")
-    )
+(set test
+    (list (range 100 200))
 )
 
-(print (dict-get profile "name"))
+(set filter
+    (def arr f (do
+        (set l (list))
+        (iterate arr elem (do
+            (if (f elem) (do
+                (list-add l elem)
+            ))
+        ))
+        (return l)
+    ))
+)
 
-(dict-set profile "career" "programmer")
+(set only20 (def el (do
+    (return (eq (mod el 20) 0))
+)))
 
-(print (dict-get profile "career"))
+(print (filter test only20))

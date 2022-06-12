@@ -80,7 +80,7 @@ type builtinDictKeysIterator struct {
 
 func (it *builtinDictKeysIterator) Iteration() builtinIteration {
 	arr := make([]any, 0, 32)
-	for k, _ := range it.dict.m {
+	for k := range it.dict.m {
 		arr = append(arr, k)
 	}
 	return &builtinArrayIteration{arr, 0}
