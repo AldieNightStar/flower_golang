@@ -49,6 +49,36 @@
     )
 )
 ```
+* Lists
+    * List is iterator too. So it could be iterated as `(of 1 2 3)` command
+```lisp
+; Create List
+(list)
+
+; Create List from iterator
+(list (of 10 20 30 40 50 60))
+
+; Copy list
+; Will make copy with all the values
+(list otherlist)
+
+; Get list element
+(list-get list 10)
+
+; Set list element
+(list-set list 10 "Ihor")
+
+; Add element to the list
+(list-add list "Adam")
+
+; Get length of the list
+(list-len list)
+
+; iterate over list elements
+(iterate list elem (do
+    (print elem)
+))
+```
 * Dictionaries
 ```lisp
 ; Create dictionary
@@ -61,10 +91,10 @@
 )
 
 ; Get value from dictionary
-(print (dict-get profile "name"))
+(dict-get profile "name")
 
 ; Set value to the dictionary
-(dict-set profile "career" "programmer")
+(dict-set profile "name" "Ihor")
 
 ; Iterate over dictionary keys
 (iterate (dict-keys profile) key (do
@@ -72,7 +102,7 @@
 ))
 
 ; Get length of dictionary
-(print (dict-len profile))
+(dict-len profile)
 ```
 * Iterators
 ```lisp
