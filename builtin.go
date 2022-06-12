@@ -16,6 +16,7 @@ var builtins = (func() *Scope {
 	builtinBool(scope)
 	builtinLoopIf(scope)
 	builtinTime(scope)
+	builtinDict(scope)
 
 	// Return command
 	scope.Api["return"] = func(s *Scope, args []*golisper.Value) (any, error) {
