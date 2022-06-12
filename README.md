@@ -21,7 +21,7 @@
 
 ; If statement (if boolean (do ...) (do ...))
 ; Second (do ...) block is not mandatory, unless you want 'else' to process
-(if (str-eq name 'Alan') (do
+(if (eq name 'Alan') (do
     (print "Oh, hi Alan")
 ) (do
     (print "Sad, cause you are not Alan")
@@ -58,9 +58,9 @@
 ; Dictionaries
 (set profile
     (dict
-        (name "Ihor")
-        (age 18)
-        (city "London")
+        (with name "Ihor")
+        (with age 18)
+        (with city "London")
     )
 )
 
