@@ -1,5 +1,2 @@
-(set ff (def a (do
-    (return (add a 1))
-)))
-
-(print (ff 4))
+(set a "Hello!")
+(print (eq a "Hello!"))
