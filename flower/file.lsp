@@ -1,11 +1,2 @@
-(set sss (list (of print)))
-(set print (def t (do
-    (set log (list-get sss 0))
-    (log "-----------------")
-    (log t)
-    (log "-----------------")
-)))
-
-(iterate (range 1 100) i (do
-    (print "Hi jack!")
-))
+(set x (add 3 2))
+(assert (eq x 4) "4!!!")

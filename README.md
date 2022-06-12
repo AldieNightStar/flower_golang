@@ -169,3 +169,11 @@
 ; Replace substring to another
 (str-rep "Ihaoer" "aoe" "o") ; will return "Ihor"
 ```
+* Assertion
+```lisp
+; Assert that 2+2=4
+(assert (eq (add 2 2) 4))
+
+; Assert with message
+(assert (eq (add 2 2) 4) "2 + 2 should be 4")
+```

@@ -18,6 +18,7 @@ var builtinScope = (func() *Scope {
 	builtinKeyVal(scope)
 	builtinsList(scope)
 	builtinString(scope)
+	builtinAssert(scope)
 
 	// Return command
 	scope.Memory["return"] = func(s *Scope, args []*golisper.Value) (any, error) {
