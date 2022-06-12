@@ -3,7 +3,7 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 func builtinMem(s *Scope) {
-	s.Api["set"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "set", 2, len(args))
 		}
@@ -14,5 +14,5 @@ func builtinMem(s *Scope) {
 		}
 		s.Memory[name] = val
 		return nil, nil
-	}
+	})
 }

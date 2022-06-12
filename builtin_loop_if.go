@@ -3,7 +3,7 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 func builtinLoopIf(s *Scope) {
-	s.Api["if"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["if"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (if (eq 2 2) (do ...))
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "if", 2, len(args))
@@ -30,5 +30,5 @@ func builtinLoopIf(s *Scope) {
 		}
 		// TODO: May be some error here?
 		return nil, nil
-	}
+	})
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func builtinTime(s *Scope) {
-	s.Api["sleep"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["sleep"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "sleep", 1, 0)
 		}
@@ -17,5 +17,5 @@ func builtinTime(s *Scope) {
 		}
 		time.Sleep(time.Millisecond * time.Duration(f))
 		return nil, nil
-	}
+	})
 }

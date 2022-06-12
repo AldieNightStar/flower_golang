@@ -3,7 +3,7 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 func builtinBool(s *Scope) {
-	s.Api["eq"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["eq"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "eq", 2, len(args))
 		}
@@ -16,12 +16,12 @@ func builtinBool(s *Scope) {
 			return nil, err
 		}
 		return o1 == o2, nil
-	}
-	s.Api["less"] = builtinBoolNumberOp(func(a, b float64) bool { return a < b })
-	s.Api["greater"] = builtinBoolNumberOp(func(a, b float64) bool { return a > b })
-	s.Api["less-eq"] = builtinBoolNumberOp(func(a, b float64) bool { return a <= b })
-	s.Api["greater-eq"] = builtinBoolNumberOp(func(a, b float64) bool { return a >= b })
-	s.Api["not"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["less"] = builtinBoolNumberOp(func(a, b float64) bool { return a < b })
+	s.Memory["greater"] = builtinBoolNumberOp(func(a, b float64) bool { return a > b })
+	s.Memory["less-eq"] = builtinBoolNumberOp(func(a, b float64) bool { return a <= b })
+	s.Memory["greater-eq"] = builtinBoolNumberOp(func(a, b float64) bool { return a >= b })
+	s.Memory["not"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "not operation", 1, 0)
 		}
@@ -30,9 +30,9 @@ func builtinBool(s *Scope) {
 			return nil, err
 		}
 		return !b, nil
-	}
-	s.Api["and"] = builtinBoolOp(func(a, b bool) bool { return a && b })
-	s.Api["or"] = builtinBoolOp(func(a, b bool) bool { return a || b })
+	})
+	s.Memory["and"] = builtinBoolOp(func(a, b bool) bool { return a && b })
+	s.Memory["or"] = builtinBoolOp(func(a, b bool) bool { return a || b })
 }
 
 func builtinBoolNumberOp(f func(a, b float64) bool) SFunc {

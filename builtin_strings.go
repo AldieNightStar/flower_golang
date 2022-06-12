@@ -8,7 +8,7 @@ import (
 )
 
 func builtinString(s *Scope) {
-	s.Api["str-iterate"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["str-iterate"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-iterate", 1, 0)
 		}
@@ -17,8 +17,8 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return &builtinStringIterator{str}, nil
-	}
-	s.Api["str-join"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-join"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-iterate", 2, len(args))
 		}
@@ -35,8 +35,8 @@ func builtinString(s *Scope) {
 			arr = append(arr, fmt.Sprint(el))
 		}
 		return strings.Join(arr, joiner), nil
-	}
-	s.Api["concat"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["concat"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		sb := strings.Builder{}
 		sb.Grow(32)
 		evaled, err := s.EvalArrayValues(args)
@@ -48,8 +48,8 @@ func builtinString(s *Scope) {
 			arr = append(arr, fmt.Sprint(el))
 		}
 		return strings.Join(arr, ""), nil
-	}
-	s.Api["str"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "str", 1, 0)
 		}
@@ -58,8 +58,8 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return fmt.Sprint(val), nil
-	}
-	s.Api["str-sub"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-sub"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-sub", 2, len(args))
 		}
@@ -78,8 +78,8 @@ func builtinString(s *Scope) {
 		start := int(startF)
 		end := int(endF)
 		return src[start:end], nil
-	}
-	s.Api["str-len"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-len", 1, 0)
 		}
@@ -88,8 +88,8 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return float64(len(str)), nil
-	}
-	s.Api["str-split"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-split"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-split", 2, len(args))
 		}
@@ -116,8 +116,8 @@ func builtinString(s *Scope) {
 			arr = append(arr, s)
 		}
 		return &builtinList{arr}, nil
-	}
-	s.Api["str-find"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-find"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-find", 2, len(args))
 		}
@@ -130,8 +130,8 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return float64(strings.Index(str, sub)), nil
-	}
-	s.Api["str-at"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-at"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-at", 2, len(args))
 		}
@@ -148,8 +148,8 @@ func builtinString(s *Scope) {
 			return "", nil
 		}
 		return str[id : id+1], nil
-	}
-	s.Api["str-rep"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["str-rep"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-rep", 2, len(args))
 		}
@@ -166,5 +166,13 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return strings.ReplaceAll(str, str1, str2), nil
-	}
+	})
+	s.Memory["print"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		elems, err := s.EvalArrayValues(args)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(elems...)
+		return nil, nil
+	})
 }

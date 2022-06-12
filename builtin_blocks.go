@@ -8,10 +8,10 @@ type codeFunction struct {
 }
 
 func builtinBlocks(s *Scope) {
-	s.Api["do"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["do"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		return newBlock(utilValuesToTags(args)), nil
-	}
-	s.Api["call"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["call"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (call block (with k val) (with k val))
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "call", 1, 0)
@@ -26,8 +26,8 @@ func builtinBlocks(s *Scope) {
 		}
 		blockScope := block.Load(s, utilCollectKeyValsToMap(evaledArgs))
 		return blockScope.Run()
-	}
-	s.Api["def"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["def"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "def", 1, 0)
 		}
@@ -49,5 +49,5 @@ func builtinBlocks(s *Scope) {
 			aliases: aliases,
 			block:   block,
 		}, nil
-	}
+	})
 }

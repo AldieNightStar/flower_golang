@@ -1,1 +1,1 @@
-(print (str-split "a,b,c" "," 2))
+(print (str-iterate "Hello!"))

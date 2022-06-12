@@ -5,11 +5,11 @@ import (
 )
 
 func builtinMath(s *Scope) {
-	s.Api["add"] = builtinMathOp(func(a, b float64) float64 { return a + b })
-	s.Api["sub"] = builtinMathOp(func(a, b float64) float64 { return a - b })
-	s.Api["mul"] = builtinMathOp(func(a, b float64) float64 { return a * b })
-	s.Api["div"] = builtinMathOp(func(a, b float64) float64 { return a / b })
-	s.Api["mod"] = builtinMathOp(func(a, b float64) float64 { return float64(int(a) % int(b)) })
+	s.Memory["add"] = builtinMathOp(func(a, b float64) float64 { return a + b })
+	s.Memory["sub"] = builtinMathOp(func(a, b float64) float64 { return a - b })
+	s.Memory["mul"] = builtinMathOp(func(a, b float64) float64 { return a * b })
+	s.Memory["div"] = builtinMathOp(func(a, b float64) float64 { return a / b })
+	s.Memory["mod"] = builtinMathOp(func(a, b float64) float64 { return float64(int(a) % int(b)) })
 }
 
 func builtinMathOp(f func(a, b float64) float64) SFunc {

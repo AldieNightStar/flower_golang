@@ -8,7 +8,7 @@ type keyval struct {
 }
 
 func builtinKeyVal(s *Scope) {
-	s.Api["with"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["with"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "with", 2, len(args))
 		}
@@ -21,5 +21,5 @@ func builtinKeyVal(s *Scope) {
 			return nil, err
 		}
 		return &keyval{key, val}, nil
-	}
+	})
 }

@@ -1,12 +1,10 @@
 package flower
 
 import (
-	"fmt"
-
 	"github.com/AldieNightStar/golisper"
 )
 
-var builtins = (func() *Scope {
+var builtinScope = (func() *Scope {
 	scope := NewScope(nil, 0, nil)
 	// Register code
 	builtinMath(scope)
@@ -22,7 +20,7 @@ var builtins = (func() *Scope {
 	builtinString(scope)
 
 	// Return command
-	scope.Api["return"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	scope.Memory["return"] = func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "return", 1, 0)
 		}
@@ -34,15 +32,5 @@ var builtins = (func() *Scope {
 		s.WillReturn = true
 		return nil, nil
 	}
-	// Print command
-	scope.Api["print"] = func(s *Scope, args []*golisper.Value) (any, error) {
-		elems, err := s.EvalArrayValues(args)
-		if err != nil {
-			return nil, err
-		}
-		fmt.Println(elems...)
-		return nil, nil
-	}
-	// End
 	return scope
 })()

@@ -12,7 +12,6 @@ type Scope struct {
 	Code       []*golisper.Tag
 	Pos        int
 	Parent     *Scope
-	Api        map[string]SFunc
 	Memory     map[string]any
 	ReturnVal  any
 	WillReturn bool
@@ -21,16 +20,15 @@ type Scope struct {
 }
 
 func NewScopeWithBuiltIns(code []*golisper.Tag, Pos int) *Scope {
-	return NewScope(code, Pos, builtins)
+	return NewScope(code, Pos, builtinScope)
 }
 
 func NewScope(Code []*golisper.Tag, Pos int, Parent *Scope) *Scope {
 	return &Scope{
 		Code:       Code,
 		Pos:        Pos,
-		Api:        make(map[string]SFunc, 64),
 		Parent:     Parent,
-		Memory:     make(map[string]any, 64),
+		Memory:     make(map[string]any),
 		ReturnVal:  nil,
 		WillReturn: false,
 		IsEnded:    false,
@@ -47,15 +45,20 @@ func (s *Scope) Next() any {
 	return res
 }
 
-func (s *Scope) GetApiFunc(name string) SFunc {
-	f, ok := s.Api[name]
+func (s *Scope) GetFuncFromVariables(name string) SFunc {
+	val, ok := s.Memory[name]
 	if !ok {
 		if s.Parent == nil {
 			return nil
 		}
-		return s.Parent.GetApiFunc(name)
+		return s.Parent.GetFuncFromVariables(name)
 	}
-	return f
+	if f, ok := val.(SFunc); ok {
+		return f
+	} else if f2, ok := val.(*codeFunction); ok {
+		return utilCodeFuncToSFunc(s, f2)
+	}
+	return nil
 }
 
 func (s *Scope) GetVariableValue(name string) any {
@@ -72,16 +75,8 @@ func (s *Scope) GetVariableValue(name string) any {
 func (s *Scope) Eval(tok any) (any, error) {
 	if tag, tagOk := tok.(*golisper.Tag); tagOk {
 		tagName := tag.Name
-		f := s.GetApiFunc(tagName)
+		f := s.GetFuncFromVariables(tagName)
 		if f == nil {
-			// Try also to find in variables
-			// TODO: replace .API with .Memory
-			codeFVal := s.GetVariableValue(tagName)
-			if codeFVal != nil {
-				if codeFunc, codeFuncOk := codeFVal.(*codeFunction); codeFuncOk {
-					return utilCodeFuncToSFunc(s, codeFunc)(s, tag.Values)
-				}
-			}
 			return nil, fmt.Errorf("api function '%s' is not exist. Line: %d", tagName, tag.Line)
 		}
 		return f(s, tag.Values)

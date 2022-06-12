@@ -3,7 +3,7 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 func builtinsList(s *Scope) {
-	s.Api["list"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["list"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		arr := make([]any, 0, 32)
 		if len(args) > 0 {
 			iter, err := EvalCast[builtinIterator]("list", s, args[0], nil)
@@ -23,8 +23,8 @@ func builtinsList(s *Scope) {
 			}
 		}
 		return &builtinList{arr}, nil
-	}
-	s.Api["list-get"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["list-get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "list-get", 2, len(args))
 		}
@@ -38,8 +38,8 @@ func builtinsList(s *Scope) {
 		}
 		id := int(idF)
 		return list.Get(id), nil
-	}
-	s.Api["list-set"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["list-set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 3 {
 			return nil, errNotEnoughArgs(s.LastLine, "list-set", 3, len(args))
 		}
@@ -57,8 +57,8 @@ func builtinsList(s *Scope) {
 			return nil, err
 		}
 		return list.Set(id, newVal), nil
-	}
-	s.Api["list-add"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["list-add"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "list-add", 2, len(args))
 		}
@@ -72,8 +72,8 @@ func builtinsList(s *Scope) {
 		}
 		list.Add(newVal)
 		return newVal, nil
-	}
-	s.Api["list-len"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["list-len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "list-len", 1, 0)
 		}
@@ -82,5 +82,5 @@ func builtinsList(s *Scope) {
 			return nil, err
 		}
 		return float64(len(list.list)), nil
-	}
+	})
 }

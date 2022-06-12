@@ -5,10 +5,10 @@ import (
 )
 
 func builtinIter(s *Scope) {
-	s.Api["of"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["of"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		return &builtinIteratorOfArgs{s, args}, nil
-	}
-	s.Api["range"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["range"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "range", 2, len(args))
 		}
@@ -21,8 +21,8 @@ func builtinIter(s *Scope) {
 			return nil, err
 		}
 		return &builtinRangeIterator{int(start), int(end)}, nil
-	}
-	s.Api["iterate"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	})
+	s.Memory["iterate"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (iterate iterator item block)
 		if len(args) < 3 {
 			return nil, errNotEnoughArgs(s.LastLine, "iterate", 3, len(args))
@@ -39,7 +39,7 @@ func builtinIter(s *Scope) {
 		iteration := iter.Iteration()
 		toBreak := false
 		scope := block.Load(s, nil)
-		scope.Api["break"] = func(s *Scope, args []*golisper.Value) (any, error) {
+		scope.Memory["break"] = func(s *Scope, args []*golisper.Value) (any, error) {
 			toBreak = true
 			s.Pos = 0xFFFFFFFF
 			return nil, nil
@@ -62,5 +62,5 @@ func builtinIter(s *Scope) {
 			}
 		}
 		return nil, nil
-	}
+	})
 }
