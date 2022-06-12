@@ -128,6 +128,7 @@ func (s *Scope) Step() error {
 }
 
 func (s *Scope) Run() (any, error) {
+	s.IsEnded = false
 	for {
 		err := s.Step()
 		if err != nil {
