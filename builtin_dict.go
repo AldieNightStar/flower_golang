@@ -2,6 +2,10 @@ package flower
 
 import "github.com/AldieNightStar/golisper"
 
+type builtinDictStruct struct {
+	m map[string]any
+}
+
 func builtinDict(s *Scope) {
 	s.Memory["dict"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		evaled, err := s.EvalArrayValues(args)

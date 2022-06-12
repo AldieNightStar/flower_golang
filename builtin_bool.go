@@ -33,6 +33,16 @@ func builtinBool(s *Scope) {
 	})
 	s.Memory["and"] = builtinBoolOp(func(a, b bool) bool { return a && b })
 	s.Memory["or"] = builtinBoolOp(func(a, b bool) bool { return a || b })
+	s.Memory["isnull"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "not operation", 1, 0)
+		}
+		val, err := s.Eval(args[0])
+		if err != nil {
+			return nil, err
+		}
+		return val != nil, nil
+	})
 }
 
 func builtinBoolNumberOp(f func(a, b float64) bool) SFunc {

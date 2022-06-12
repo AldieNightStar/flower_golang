@@ -63,4 +63,24 @@ func builtinIter(s *Scope) {
 		}
 		return nil, nil
 	})
+	s.Memory["iteration"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "iteration", 1, 0)
+		}
+		iter, err := EvalCast[builtinIterator]("iteration", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return iter.Iteration(), nil
+	})
+	s.Memory["next"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "next", 1, 0)
+		}
+		iter, err := EvalCast[builtinIteration]("next", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return iter.Iterate()
+	})
 }

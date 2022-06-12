@@ -120,6 +120,13 @@
 (iterate (range 0 100) item (do
     (print item)
 ))
+
+; If you want to poll items one by one
+; It will take iterator and get iteration stream
+(iteration (of 10 20 30 40))
+
+; Poll items from iteration stream
+(print (next p))
 ```
 * Loops
 ```lisp
