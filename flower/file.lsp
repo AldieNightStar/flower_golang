@@ -1,3 +1,9 @@
-(iterate (range 1 5) cnt (do
-    (print "RANGE" cnt)
+((set b (do
+    (print name)
+    (print age)
+    (return 1)
 ))
+(print (call b
+    (with "name" "Ihor")
+    (with "age" 18)
+)))

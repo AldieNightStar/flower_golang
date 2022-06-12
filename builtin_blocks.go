@@ -20,11 +20,11 @@ func builtinBlocks(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		with, err := utilReadAllWithTags(s, args[1:])
+		evaledArgs, err := s.EvalArrayValues(args[1:])
 		if err != nil {
 			return nil, err
 		}
-		blockScope := block.Load(s, with)
+		blockScope := block.Load(s, utilCollectKeyValsToMap(evaledArgs))
 		return blockScope.Run()
 	}
 	s.Api["def"] = func(s *Scope, args []*golisper.Value) (any, error) {
