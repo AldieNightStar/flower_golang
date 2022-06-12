@@ -2,6 +2,18 @@ package flower
 
 import "github.com/AldieNightStar/golisper"
 
+func utilIgnoreHashBangAtStart(src string) string {
+	if src[0:2] != "#!" {
+		return src
+	}
+	for id, c := range src {
+		if c == '\n' {
+			return src[id+1:]
+		}
+	}
+	return src
+}
+
 func utilReadTagValues(val *golisper.Value, name string) []*golisper.Value {
 	if val.Type != golisper.TYPE_TAG {
 		return nil

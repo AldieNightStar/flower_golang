@@ -24,5 +24,7 @@ func LoadFromFile(name string) (*Scope, error) {
 	if err != nil {
 		return nil, err
 	}
-	return Load(string(dat))
+	return Load(
+		utilIgnoreHashBangAtStart(string(dat)),
+	)
 }
