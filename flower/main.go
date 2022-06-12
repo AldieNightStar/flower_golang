@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fileName := LoadNameFromArgs(false) // debug
+	fileName := LoadNameFromArgs(true) // debug
 	if fileName == "" {
 		return
 	}
