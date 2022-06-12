@@ -83,4 +83,60 @@ func builtinsList(s *Scope) {
 		}
 		return float64(len(list.list)), nil
 	})
+	s.Memory["stack"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		stack := newStack[any](1024)
+		if len(args) > 0 {
+			iter, err := EvalCast[builtinIterator]("stack", s, args[0], nil)
+			if err != nil {
+				return nil, err
+			}
+			iteration := iter.Iteration()
+			for {
+				elem, err := iteration.Iterate()
+				if err != nil {
+					return nil, err
+				}
+				if elem == nil {
+					break
+				}
+				stack.Push(elem)
+			}
+		}
+		return stack, nil
+	})
+	s.Memory["pop"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "pop", 1, 0)
+		}
+		stack, err := EvalCast[*stack[any]]("pop", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		val, _ := stack.Pop(nil)
+		return val, nil
+	})
+	s.Memory["push"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "push", 2, len(args))
+		}
+		stack, err := EvalCast[*stack[any]]("push", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		val, err := s.Eval(args[1])
+		if err != nil {
+			return nil, err
+		}
+		return stack.Push(val), nil
+	})
+	s.Memory["stack-len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "stack-len", 1, 0)
+		}
+		stack, err := EvalCast[*stack[any]]("stack-len", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return float64(stack.Ptr), nil
+	})
 }

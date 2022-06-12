@@ -123,10 +123,32 @@
 
 ; If you want to poll items one by one
 ; It will take iterator and get iteration stream
-(iteration (of 10 20 30 40))
+(set iter
+    (iteration (of 10 20 30 40))
+)
 
-; Poll items from iteration stream
-(print (next p))
+; Poll items from iteration stream one by one
+(next iter)
+
+; Poll remain items one by one into a list
+(next-all iter)
+```
+* Stacks
+```lisp
+; Create empty stack
+(stack)
+
+; Create stack with iterator
+(stack (of 10 20 30))
+
+; Push value. Let's assume 's' is a Stack variable
+(push s "Some value")
+
+; Pop value. Let's assume 's' is a Stack variable
+(pop s)
+
+; Get length of the stack
+(stack-len s)
 ```
 * Loops
 ```lisp

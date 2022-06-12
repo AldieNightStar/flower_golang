@@ -83,4 +83,25 @@ func builtinIter(s *Scope) {
 		}
 		return iter.Iterate()
 	})
+	s.Memory["next-all"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "next", 1, 0)
+		}
+		iter, err := EvalCast[builtinIteration]("next", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		arr := &builtinList{make([]any, 0, 32)}
+		for {
+			elem, err := iter.Iterate()
+			if err != nil {
+				return nil, err
+			}
+			if elem == nil {
+				break
+			}
+			arr.list = append(arr.list, elem)
+		}
+		return arr, nil
+	})
 }
