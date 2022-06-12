@@ -17,6 +17,11 @@ type Scope struct {
 	ReturnVal  any
 	WillReturn bool
 	IsEnded    bool
+	LastLine   int
+}
+
+func NewScopeWithBuiltIns(code []*golisper.Tag, Pos int) *Scope {
+	return NewScope(code, Pos, builtins)
 }
 
 func NewScope(Code []*golisper.Tag, Pos int, Parent *Scope) *Scope {
@@ -37,6 +42,7 @@ func (s *Scope) Next() any {
 		return nil
 	}
 	res := s.Code[s.Pos]
+	s.LastLine = res.Line
 	s.Pos += 1
 	return res
 }
@@ -129,4 +135,8 @@ func (s *Scope) Run() (any, error) {
 			return nil, nil
 		}
 	}
+}
+
+func (s *Scope) LocalScope(vals []*golisper.Value) *Scope {
+	return NewScope(utilValuesToTags(vals), 0, s)
 }

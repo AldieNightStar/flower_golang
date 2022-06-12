@@ -12,7 +12,7 @@ func Load(src string) (*Scope, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewScope(tags, 0, nil), nil
+	return NewScopeWithBuiltIns(tags, 0), nil
 }
 
 func LoadFromFile(name string) (*Scope, error) {
