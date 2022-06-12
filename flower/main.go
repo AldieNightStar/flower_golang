@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/AldieNightStar/flower"
 )
 
 func main() {
-	scope, err := flower.LoadFromFile("file.lsp")
+	fileName := LoadNameFromArgs(false) // debug
+	if fileName == "" {
+		return
+	}
+	scope, err := flower.LoadFromFile(fileName)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -17,4 +22,16 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+}
+
+func LoadNameFromArgs(debug bool) string {
+	if debug {
+		return "file.lsp"
+	}
+	args := os.Args[1:]
+	if len(args) < 1 {
+		fmt.Println("Enter file to run:\n\tflower file.lsp")
+		return ""
+	}
+	return args[0]
 }
