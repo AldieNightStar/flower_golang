@@ -90,3 +90,21 @@ func utilReadAllWithTags(scope *Scope, vals []*golisper.Value) (map[string]any, 
 	}
 	return with, nil
 }
+
+func utilCodeFuncToSFunc(parent *Scope, f *codeFunction) SFunc {
+	return func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < len(f.aliases) {
+			return nil, errNotEnoughArgs(s.LastLine, "call function", len(f.aliases), len(args))
+		}
+		with := make(map[string]any)
+		for id, alias := range f.aliases {
+			evaledArg, err := s.Eval(args[id])
+			if err != nil {
+				return nil, err
+			}
+			with[alias] = evaledArg
+		}
+		scope := f.block.Load(parent, with)
+		return scope.Run()
+	}
+}

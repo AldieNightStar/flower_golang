@@ -74,6 +74,14 @@ func (s *Scope) Eval(tok any) (any, error) {
 		tagName := tag.Name
 		f := s.GetApiFunc(tagName)
 		if f == nil {
+			// Try also to find in variables
+			// TODO: replace .API with .Memory
+			codeFVal := s.GetVariableValue(tagName)
+			if codeFVal != nil {
+				if codeFunc, codeFuncOk := codeFVal.(*codeFunction); codeFuncOk {
+					return utilCodeFuncToSFunc(s, codeFunc)(s, tag.Values)
+				}
+			}
 			return nil, fmt.Errorf("api function '%s' is not exist. Line: %d", tagName, tag.Line)
 		}
 		return f(s, tag.Values)

@@ -1,12 +1,5 @@
-(set block (do
-    (print name)
-    (return 1111)
-    (print age)
-    (print size)
-))
+(set ff (def a (do
+    (return (add a 1))
+)))
 
-(print (call block
-    (with name "Ihor")
-    (with age 18)
-    (with size 34)
-))
+(print (ff 4))

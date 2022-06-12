@@ -17,21 +17,13 @@ func builtinMathOp(f func(a, b float64) float64) SFunc {
 		if len(args) < 2 {
 			return 0, nil
 		}
-		e1, err := s.Eval(args[0])
+		f1, err := EvalCast[float64]("math operation", s, args[0], 0)
 		if err != nil {
 			return nil, err
 		}
-		e2, err := s.Eval(args[1])
+		f2, err := EvalCast[float64]("math operation", s, args[1], 0)
 		if err != nil {
 			return nil, err
-		}
-		f1, ok := e1.(float64)
-		if !ok {
-			return 0, nil
-		}
-		f2, ok := e2.(float64)
-		if !ok {
-			return 0, nil
 		}
 		return f(f1, f2), nil
 	}
