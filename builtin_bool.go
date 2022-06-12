@@ -31,6 +31,8 @@ func builtinBool(s *Scope) {
 		}
 		return !b, nil
 	}
+	s.Api["and"] = builtinBoolOp(func(a, b bool) bool { return a && b })
+	s.Api["or"] = builtinBoolOp(func(a, b bool) bool { return a || b })
 }
 
 func builtinBoolNumberOp(f func(a, b float64) bool) SFunc {
@@ -47,5 +49,22 @@ func builtinBoolNumberOp(f func(a, b float64) bool) SFunc {
 			return nil, err
 		}
 		return f(f1, f2), nil
+	}
+}
+
+func builtinBoolOp(f func(a, b bool) bool) SFunc {
+	return func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "comparing numbers", 2, len(args))
+		}
+		b1, err := EvalCast[bool]("comparing numbers", s, args[0], false)
+		if err != nil {
+			return nil, err
+		}
+		b2, err := EvalCast[bool]("comparing numbers", s, args[1], false)
+		if err != nil {
+			return nil, err
+		}
+		return f(b1, b2), nil
 	}
 }
