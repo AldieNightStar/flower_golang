@@ -67,7 +67,7 @@ func utilReadTagWithName(name string, val *golisper.Value) *golisper.Tag {
 	return tag
 }
 
-func utilCodeFuncToSFunc(parent *Scope, f *codeFunction) SFunc {
+func utilCodeFuncToSFunc(f *codeFunction) SFunc {
 	return func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < len(f.aliases) {
 			return nil, errNotEnoughArgs(s.LastLine, "call function", len(f.aliases), len(args))
@@ -80,7 +80,7 @@ func utilCodeFuncToSFunc(parent *Scope, f *codeFunction) SFunc {
 			}
 			with[alias] = evaledArg
 		}
-		scope := f.block.Load(parent, with)
+		scope := f.block.Load(s, with)
 		return scope.Run()
 	}
 }

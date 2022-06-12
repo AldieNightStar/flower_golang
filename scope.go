@@ -55,8 +55,6 @@ func (s *Scope) GetFuncFromVariables(name string) SFunc {
 	}
 	if f, ok := val.(SFunc); ok {
 		return f
-	} else if f2, ok := val.(*codeFunction); ok {
-		return utilCodeFuncToSFunc(s, f2)
 	}
 	return nil
 }

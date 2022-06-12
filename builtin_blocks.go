@@ -45,9 +45,10 @@ func builtinBlocks(s *Scope) {
 				return nil, err
 			}
 		}
-		return &codeFunction{
+		codeFunc := &codeFunction{
 			aliases: aliases,
 			block:   block,
-		}, nil
+		}
+		return utilCodeFuncToSFunc(codeFunc), nil
 	})
 }
