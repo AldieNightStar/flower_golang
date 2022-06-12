@@ -1,5 +1,3 @@
-#!flower
-(repeat 1000 i (do
-    (print i)
-    (print "--------")
+(iterate (range 1 5) cnt (do
+    (print "RANGE" cnt)
 ))
