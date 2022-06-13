@@ -12,14 +12,28 @@ func builtinMem(s *Scope) {
 			return nil, errNotEnoughArgs(s.LastLine, "set", 2, len(args))
 		}
 		name := utilReadEtcString(args[0])
-		if strings.Contains(name, ".") {
-			return nil, newErrLineName(s.LastLine, "set", "Path variable not allowed here")
-		}
-		val, err := s.Eval(args[1])
+		newVal, err := s.Eval(args[1])
 		if err != nil {
 			return nil, err
 		}
-		s.Memory[name] = val
+		if path := utilReadPathVariableName(name); path != nil {
+			// If name has dots
+			// Get the dictionary and write value to it
+			// [!] last name value is key for the dictionary
+			key := path[len(path)-1]
+			path = path[0 : len(path)-1]
+			val, err := utilEvalPathVariable(s, path)
+			if err != nil {
+				return nil, err
+			}
+			if dict, ok := val.(*builtinDictStruct); ok {
+				dict.m[key] = newVal
+				return nil, nil
+			}
+			return nil, newErrLineName(s.LastLine, "set", "Can't set value inside non-dict")
+		} else {
+			s.Memory[name] = newVal
+		}
 		return nil, nil
 	})
 	s.Memory["require"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {

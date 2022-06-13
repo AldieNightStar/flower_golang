@@ -98,7 +98,7 @@
 (print profile.name)
 
 ; Set value to the dictionary
-; DO NOT use (set profile.name "Ihor") - it's not allowed
+; Also you can use (set profile.name "Ihor") as well
 (dict.set profile "name" "Ihor")
 
 ; Set value to the directory with '.'
