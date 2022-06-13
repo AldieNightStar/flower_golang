@@ -50,29 +50,29 @@
 )
 ```
 * Lists
-    * List is iterator too. So it could be iterated as `(of 1 2 3)` command
+    * List is also iterator. So it could be iterated
 ```lisp
 ; Create List
-(list)
+(list.new)
 
 ; Create List from iterator
-(list (of 10 20 30 40 50 60))
+(list.new (of 10 20 30 40 50 60))
 
 ; Copy list
 ; Will make copy with all the values
-(list otherlist)
+(list.new otherlist)
 
 ; Get list element
-(list-get list 10)
+(list.get list 10)
 
 ; Set list element
-(list-set list 10 "Ihor")
+(list.set list 10 "Ihor")
 
 ; Add element to the list
-(list-add list "Adam")
+(list.add list "Adam")
 
 ; Get length of the list
-(list-len list)
+(list.len list)
 
 ; iterate over list elements
 (iterate list elem (do
@@ -186,7 +186,7 @@
 
 ; Join list of strings with "+" symbol. You can set whatever you want
 (str-join
-    (list of("Hi", "Jack", "Mary"))
+    (list.new of("Hi", "Jack", "Mary"))
     "+"
 )
 
