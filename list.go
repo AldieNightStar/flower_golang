@@ -1,5 +1,10 @@
 package flower
 
+import (
+	"fmt"
+	"strings"
+)
+
 type builtinList struct {
 	list []any
 }
@@ -25,4 +30,12 @@ func (l *builtinList) Set(id int, val any) bool {
 
 func (l *builtinList) Iteration() builtinIteration {
 	return &builtinArrayIteration{l.list, 0}
+}
+
+func (d builtinList) String() string {
+	arr := make([]string, 0, 8)
+	for k, v := range d.list {
+		arr = append(arr, fmt.Sprintf("[%d] = ", k)+fmt.Sprint(v))
+	}
+	return "LIST [" + strings.Join(arr, ", ") + "]"
 }

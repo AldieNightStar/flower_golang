@@ -1,10 +1,23 @@
 package flower
 
-import "github.com/AldieNightStar/golisper"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/AldieNightStar/golisper"
+)
 
 type builtinDictStruct struct {
 	m     map[string]any
 	super *builtinDictStruct
+}
+
+func (d builtinDictStruct) String() string {
+	arr := make([]string, 0, 8)
+	for k, v := range d.m {
+		arr = append(arr, "["+k+"] = "+fmt.Sprint(v))
+	}
+	return "DICT [" + strings.Join(arr, ", ") + "]"
 }
 
 func newBuitinDict() *builtinDictStruct {
