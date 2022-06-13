@@ -35,7 +35,7 @@ func builtinFiles(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		f, err := os.Open(name)
+		f, err := os.Create(name)
 		if err != nil {
 			return nil, newErrLineName(s.LastLine, "fs write", err.Error())
 		}

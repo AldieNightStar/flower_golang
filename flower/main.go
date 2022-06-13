@@ -8,11 +8,12 @@ import (
 )
 
 func main() {
-	fileName := LoadNameFromArgs(true) // debug
-	if fileName == "" {
+	args := os.Args[1:]
+	if len(args) < 1 {
+		fmt.Println("Enter file to run:\n\tflower file.lsp")
 		return
 	}
-	scope, err := flower.LoadFromFile(fileName)
+	scope, err := flower.LoadFromFile(args[0])
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -23,16 +24,4 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-}
-
-func LoadNameFromArgs(debug bool) string {
-	if debug {
-		return "file.lsp"
-	}
-	args := os.Args[1:]
-	if len(args) < 1 {
-		fmt.Println("Enter file to run:\n\tflower file.lsp")
-		return ""
-	}
-	return args[0]
 }
