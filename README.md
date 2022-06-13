@@ -216,6 +216,9 @@
 
 ; Replace substring to another
 (str.rep "Ihaoer" "aoe" "o") ; will return "Ihor"
+
+; Multiply strings
+(str.mul "Hello" 3) ; Will return "HelloHelloHello"
 ```
 * Time
 ```lisp
@@ -229,6 +232,23 @@
 
 ; Assert with message
 (assert (eq (add 2 2) 4) "2 + 2 should be 4")
+```
+* FileSystem
+```lisp
+; Import
+; Importing file need to return something
+; CAUTION: CYCLE dependencies could cause recursion and fail
+;    better to have some utils or common file which not imports anything itself
+(set utils (fs.import "utils.lsp"))
+
+; Read file as string
+(fs.read "test.txt")
+
+; Write string to a file
+(fs.write "test.txt" "Some value")
+
+; Delete the file
+(fs.delete "test.txt")
 ```
 * OOP
 ```lisp

@@ -1,6 +1,8 @@
 package flower
 
 import (
+	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/AldieNightStar/golisper"
@@ -137,4 +139,16 @@ func utilEvalPathVariable(s *Scope, path []string) (any, error) {
 		return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to a non dict value in the middle: "+name)
 	}
 	return nil, nil
+}
+
+func utilReadFileAsString(name string) (string, error) {
+	file, err := os.Open(name)
+	if err != nil {
+		return "", err
+	}
+	dat, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "", err
+	}
+	return string(dat), nil
 }

@@ -138,7 +138,12 @@ func (s *Scope) Step() error {
 	return nil
 }
 
-func (s *Scope) Run() (any, error) {
+func (s *Scope) Run() (res any, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = newErrLineName(s.LastLine, "panic", fmt.Sprint(r))
+		}
+	}()
 	s.Pos = 0
 	s.IsEnded = false
 	for {
@@ -160,4 +165,8 @@ func (s *Scope) Run() (any, error) {
 
 func (s *Scope) LocalScope(vals []*golisper.Value) *Scope {
 	return NewScope(utilValuesToTags(vals), 0, s)
+}
+
+func (s *Scope) AllowFileAccess() {
+	builtinFiles(s)
 }

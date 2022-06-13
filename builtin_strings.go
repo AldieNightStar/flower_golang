@@ -152,7 +152,7 @@ func builtinString(s *Scope) {
 	})
 	str.m["rep"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-rep", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str rep", 2, len(args))
 		}
 		str, err := EvalCast("str rep", s, args[0], "")
 		if err != nil {
@@ -167,6 +167,21 @@ func builtinString(s *Scope) {
 			return nil, err
 		}
 		return strings.ReplaceAll(str, str1, str2), nil
+	})
+	str.m["mul"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "str mul", 2, len(args))
+		}
+		str, err := EvalCast("str mul", s, args[0], "")
+		if err != nil {
+			return nil, err
+		}
+		countF, err := EvalCast[float64]("str mul", s, args[1], 0)
+		if err != nil {
+			return nil, err
+		}
+		count := int(countF)
+		return strings.Repeat(str, count), nil
 	})
 	s.Memory["print"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		elems, err := s.EvalArrayValues(args)

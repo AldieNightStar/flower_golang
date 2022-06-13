@@ -17,6 +17,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+	scope.AllowFileAccess()
 	_, err = scope.Run()
 	if err != nil {
 		fmt.Println(err)
