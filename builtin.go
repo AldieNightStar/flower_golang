@@ -21,7 +21,7 @@ var builtinScope = (func() *Scope {
 	builtinAssert(scope)
 
 	// Return command
-	scope.Memory["return"] = func(s *Scope, args []*golisper.Value) (any, error) {
+	scope.Memory["return"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "return", 1, 0)
 		}
@@ -32,6 +32,6 @@ var builtinScope = (func() *Scope {
 		}
 		s.WillReturn = true
 		return nil, nil
-	}
+	})
 	return scope
 })()

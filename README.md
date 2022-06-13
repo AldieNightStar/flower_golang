@@ -206,3 +206,48 @@
 ; Assert with message
 (assert (eq (add 2 2) 4) "2 + 2 should be 4")
 ```
+* Cells
+    * Helps to overcome interscope variable savings
+    * Can be modified accross the scopes
+```lisp
+; Create empty cell
+(set c (cell))
+
+; Create cell with value
+(set c (cell 123))
+
+; Get cell value
+(cell-get c)
+
+; Set cell value
+(cell-set c 111)
+```
+
+# Sample
+* Real working parser in `flower`
+```lisp
+; Function (parse text)
+(set parse (def t (do
+    (set arr (list))
+    (set acc (cell (list)))
+
+    (iterate (str-iterate (concat t " ")) c (do
+        (if (or (eq c " ") (eq c "\t")) (do
+            (list-add arr (str-join (cell-get acc) ""))
+            (cell-set acc (list))
+        ) (do
+            (list-add (cell-get acc) c)
+        ))
+    ))
+
+    (return arr)
+)))
+
+; Call the parser (parse text)
+(print (parse "Hello world and all inside"))
+
+; Iterate over parser's result. Will iterate every word
+(iterate (parse "This is the parsed array") word (do
+    (print word)
+))
+```

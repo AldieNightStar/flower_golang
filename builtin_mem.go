@@ -6,6 +6,10 @@ import (
 	"github.com/AldieNightStar/golisper"
 )
 
+type builtinCell struct {
+	val any
+}
+
 func builtinMem(s *Scope) {
 	s.Memory["set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
@@ -17,6 +21,42 @@ func builtinMem(s *Scope) {
 			return nil, err
 		}
 		s.Memory[name] = val
+		return nil, nil
+	})
+	s.Memory["cell"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		var val any
+		var err error
+		if len(args) > 0 {
+			val, err = s.Eval(args[0])
+			if err != nil {
+				return nil, err
+			}
+		}
+		return &builtinCell{val}, nil
+	})
+	s.Memory["cell-get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "set", 1, 0)
+		}
+		cell, err := EvalCast[*builtinCell]("cell-set", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return cell.val, nil
+	})
+	s.Memory["cell-set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "set", 2, len(args))
+		}
+		cell, err := EvalCast[*builtinCell]("cell-set", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		val, err := s.Eval(args[1])
+		if err != nil {
+			return nil, err
+		}
+		cell.val = val
 		return nil, nil
 	})
 	s.Memory["require"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
