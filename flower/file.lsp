@@ -1,16 +1,13 @@
-(set profile
+(set api
     (dict
-        (with "name" "Ihor")
-        (with "age" 18)
-        (with "inventory" (dict
-                (with "knife" 1)
-                (with "water" 3)
-                (with "food" 7)
-            )
-        )
+        (with "print" print)
+        (with "printCool" (def t (do
+            (print "-------------------------------")
+            (print t)
+            (print "-------------------------------")
+        )))
     )
 )
 
-(print profile.inventory.food)
-(dict-set profile.inventory "food" (add profile.inventory.food 1))
-(print profile.inventory.food)
+(api.print "Hello!")
+(api.printCool "Hello sir!")

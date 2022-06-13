@@ -73,7 +73,20 @@ func (s *Scope) GetVariableValue(name string) any {
 func (s *Scope) Eval(tok any) (any, error) {
 	if tag, tagOk := tok.(*golisper.Tag); tagOk {
 		tagName := tag.Name
-		f := s.GetFuncFromVariables(tagName)
+		var f SFunc
+		if path := utilReadPathVariableName(tagName); path != nil {
+			val, err := utilEvalPathVariable(s, path)
+			if err != nil {
+				return nil, err
+			}
+			if valF, ok := val.(SFunc); ok {
+				f = valF
+			} else {
+				return nil, newErrLineName(s.LastLine, "tag call", "Path leads to unknown function")
+			}
+		} else {
+			f = s.GetFuncFromVariables(tagName)
+		}
 		if f == nil {
 			return nil, fmt.Errorf("function '%s' is not exist. Line: %d", tagName, tag.Line)
 		}
