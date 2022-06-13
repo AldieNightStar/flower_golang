@@ -7,6 +7,13 @@ type builtinDictStruct struct {
 	super *builtinDictStruct
 }
 
+func newBuitinDict() *builtinDictStruct {
+	return &builtinDictStruct{
+		m:     make(map[string]any),
+		super: nil,
+	}
+}
+
 func (d *builtinDictStruct) GetValue(name string) any {
 	val, ok := d.m[name]
 	if !ok {
@@ -24,7 +31,8 @@ type builtinExtends struct {
 }
 
 func builtinDict(s *Scope) {
-	s.Memory["dict"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	d := newBuitinDict()
+	d.m["new"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		evaled, err := s.EvalArrayValues(args)
 		if err != nil {
 			return nil, err
@@ -37,7 +45,7 @@ func builtinDict(s *Scope) {
 		}
 		return dictSturct, nil
 	})
-	s.Memory["dict-get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	d.m["get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict-get", 2, len(args))
 		}
@@ -62,7 +70,7 @@ func builtinDict(s *Scope) {
 		}
 		return item, nil
 	})
-	s.Memory["dict-set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	d.m["set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 3 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 3, len(args))
 		}
@@ -81,7 +89,7 @@ func builtinDict(s *Scope) {
 		dict.m[name] = val
 		return val, nil
 	})
-	s.Memory["dict-len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	d.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 1, 0)
 		}
@@ -91,7 +99,7 @@ func builtinDict(s *Scope) {
 		}
 		return float64(len(dict.m)), nil
 	})
-	s.Memory["dict-keys"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	d.m["keys"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 1, 0)
 		}
@@ -111,4 +119,5 @@ func builtinDict(s *Scope) {
 		}
 		return &builtinExtends{dict}, nil
 	})
+	s.Memory["dict"] = d
 }
