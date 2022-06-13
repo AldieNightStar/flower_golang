@@ -80,7 +80,12 @@ func (s *Scope) Eval(tok any) (any, error) {
 		return f(s, tag.Values)
 	} else if val, valOk := tok.(*golisper.Value); valOk {
 		if val.Type == golisper.TYPE_ETC_STRING {
-			return s.GetVariableValue(val.StringVal), nil
+			path := utilReadPathVariableName(val.StringVal)
+			if path == nil {
+				return s.GetVariableValue(val.StringVal), nil
+			} else {
+				return utilEvalPathVariable(s, path)
+			}
 		} else if val.Type == golisper.TYPE_STRING {
 			return val.StringVal, nil
 		} else if val.Type == golisper.TYPE_NUMBER {

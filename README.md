@@ -90,11 +90,19 @@
     )
 )
 
-; Get value from dictionary
+; Get value from dictionary by string
 (dict-get profile "name")
+
+; Get value from dictionary as variable
+; You can use '.' to enter in deep. Like: (set name profile.portfolio.name)
+(print profile.name)
 
 ; Set value to the dictionary
 (dict-set profile "name" "Ihor")
+
+; Set value to the directory with '.'
+; Let's say we want to change profile.cities.first = "Lviv"
+(dict-set profile.cities "first" "Lviv")
 
 ; Iterate over dictionary keys
 (iterate (dict-keys profile) key (do

@@ -1,6 +1,10 @@
 package flower
 
-import "github.com/AldieNightStar/golisper"
+import (
+	"strings"
+
+	"github.com/AldieNightStar/golisper"
+)
 
 func utilIgnoreHashBangAtStart(src string) string {
 	if src[0:2] != "#!" {
@@ -93,4 +97,39 @@ func utilCollectKeyValsToMap(vals []any) map[string]any {
 		}
 	}
 	return mp
+}
+
+func utilReadPathVariableName(str string) []string {
+	if !strings.Contains(str, ".") {
+		return nil
+	}
+	return strings.Split(str, ".")
+}
+
+func utilEvalPathVariable(s *Scope, path []string) (any, error) {
+	var d *builtinDictStruct
+	var val any
+	for id, name := range path {
+		if id == 0 {
+			val = s.GetVariableValue(name)
+		} else {
+			var ok bool
+			val, ok = d.m[name]
+			if !ok {
+				val = nil
+			}
+		}
+		if id == len(path)-1 { // If last
+			return val, nil
+		}
+		if val == nil {
+			return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to nil in the middle: "+name)
+		}
+		if dictVal, dictOk := val.(*builtinDictStruct); dictOk {
+			d = dictVal
+			continue
+		}
+		return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to a non dict value in the middle: "+name)
+	}
+	return nil, nil
 }
