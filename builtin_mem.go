@@ -16,6 +16,9 @@ func builtinMem(s *Scope) {
 			return nil, errNotEnoughArgs(s.LastLine, "set", 2, len(args))
 		}
 		name := utilReadEtcString(args[0])
+		if strings.Contains(name, ".") {
+			return nil, newErrLineName(s.LastLine, "set", "Path variable not allowed here")
+		}
 		val, err := s.Eval(args[1])
 		if err != nil {
 			return nil, err

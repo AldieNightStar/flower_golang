@@ -98,6 +98,7 @@
 (print profile.name)
 
 ; Set value to the dictionary
+; DO NOT use (set profile.name "Ihor") - it's not allowed
 (dict-set profile "name" "Ihor")
 
 ; Set value to the directory with '.'
@@ -111,6 +112,9 @@
 
 ; Get length of dictionary
 (dict-len profile)
+
+; Extender. When value not found it will look in extending dict
+(dict (extends profile))
 ```
 * Iterators
 ```lisp
