@@ -3,6 +3,9 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 func builtinBool(s *Scope) {
+	s.Memory["true"] = true
+	s.Memory["false"] = false
+	s.Memory["nil"] = nil
 	s.Memory["eq"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "eq", 2, len(args))
