@@ -8,25 +8,26 @@ import (
 )
 
 func builtinString(s *Scope) {
-	s.Memory["str-iterate"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str := newBuitinDict()
+	str.m["iterate"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-iterate", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "str iterate", 1, 0)
 		}
-		str, err := EvalCast("str-iterate", s, args[0], "")
+		str, err := EvalCast("str iterate", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
 		return &builtinStringIterator{str}, nil
 	})
-	s.Memory["str-join"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["join"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-iterate", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str iterate", 2, len(args))
 		}
-		list, err := EvalCast[*builtinList]("str-iterate", s, args[0], nil)
+		list, err := EvalCast[*builtinList]("str iterate", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
-		joiner, err := EvalCast("str-iterate", s, args[1], "")
+		joiner, err := EvalCast("str iterate", s, args[1], "")
 		if err != nil {
 			return nil, err
 		}
@@ -36,7 +37,7 @@ func builtinString(s *Scope) {
 		}
 		return strings.Join(arr, joiner), nil
 	})
-	s.Memory["concat"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["concat"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		sb := strings.Builder{}
 		sb.Grow(32)
 		evaled, err := s.EvalArrayValues(args)
@@ -49,7 +50,7 @@ func builtinString(s *Scope) {
 		}
 		return strings.Join(arr, ""), nil
 	})
-	s.Memory["str"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["str"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "str", 1, 0)
 		}
@@ -59,19 +60,19 @@ func builtinString(s *Scope) {
 		}
 		return fmt.Sprint(val), nil
 	})
-	s.Memory["str-sub"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["sub"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-sub", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str sub", 2, len(args))
 		}
-		src, err := EvalCast("str-sub", s, args[0], "")
+		src, err := EvalCast("str sub", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
-		startF, err := EvalCast[float64]("str-sub", s, args[1], 0)
+		startF, err := EvalCast[float64]("str sub", s, args[1], 0)
 		if err != nil {
 			return nil, err
 		}
-		endF, err := EvalCast[float64]("str-sub", s, args[2], 0)
+		endF, err := EvalCast[float64]("str sub", s, args[2], 0)
 		if err != nil {
 			return nil, err
 		}
@@ -79,31 +80,31 @@ func builtinString(s *Scope) {
 		end := int(endF)
 		return src[start:end], nil
 	})
-	s.Memory["str-len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-len", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "str len", 1, 0)
 		}
-		str, err := EvalCast("str-len", s, args[0], "")
+		str, err := EvalCast("str len", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
 		return float64(len(str)), nil
 	})
-	s.Memory["str-split"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["split"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-split", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str split", 2, len(args))
 		}
-		str, err := EvalCast("str-split", s, args[0], "")
+		str, err := EvalCast("str split", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
-		sep, err := EvalCast("str-split", s, args[1], "")
+		sep, err := EvalCast("str split", s, args[1], "")
 		if err != nil {
 			return nil, err
 		}
 		var strs []string
 		if len(args) > 2 {
-			count, err := EvalCast[float64]("str-split", s, args[2], 0)
+			count, err := EvalCast[float64]("str split", s, args[2], 0)
 			if err != nil {
 				return nil, err
 			}
@@ -117,29 +118,29 @@ func builtinString(s *Scope) {
 		}
 		return &builtinList{arr}, nil
 	})
-	s.Memory["str-find"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["find"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-find", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str find", 2, len(args))
 		}
-		str, err := EvalCast("str-find", s, args[0], "")
+		str, err := EvalCast("str find", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
-		sub, err := EvalCast("str-find", s, args[1], "")
+		sub, err := EvalCast("str find", s, args[1], "")
 		if err != nil {
 			return nil, err
 		}
 		return float64(strings.Index(str, sub)), nil
 	})
-	s.Memory["str-at"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["at"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "str-at", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "str at", 2, len(args))
 		}
-		str, err := EvalCast("str-at", s, args[0], "")
+		str, err := EvalCast("str at", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
-		idf, err := EvalCast[float64]("str-at", s, args[1], 0)
+		idf, err := EvalCast[float64]("str at", s, args[1], 0)
 		if err != nil {
 			return nil, err
 		}
@@ -149,19 +150,19 @@ func builtinString(s *Scope) {
 		}
 		return str[id : id+1], nil
 	})
-	s.Memory["str-rep"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	str.m["rep"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "str-rep", 2, len(args))
 		}
-		str, err := EvalCast("str-rep", s, args[0], "")
+		str, err := EvalCast("str rep", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
-		str1, err := EvalCast("str-rep", s, args[1], "")
+		str1, err := EvalCast("str rep", s, args[1], "")
 		if err != nil {
 			return nil, err
 		}
-		str2, err := EvalCast("str-rep", s, args[2], "")
+		str2, err := EvalCast("str rep", s, args[2], "")
 		if err != nil {
 			return nil, err
 		}
@@ -175,4 +176,6 @@ func builtinString(s *Scope) {
 		fmt.Println(elems...)
 		return nil, nil
 	})
+
+	s.Memory["str"] = str
 }

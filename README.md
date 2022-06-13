@@ -148,19 +148,19 @@
 * Stacks
 ```lisp
 ; Create empty stack
-(stack)
+(stack.new)
 
 ; Create stack with iterator
-(stack (of 10 20 30))
+(stack.new (of 10 20 30))
 
 ; Push value. Let's assume 's' is a Stack variable
-(push s "Some value")
+(stack.push s "Some value")
 
 ; Pop value. Let's assume 's' is a Stack variable
-(pop s)
+(stack.pop s)
 
 ; Get length of the stack
-(stack-len s)
+(stack.len s)
 ```
 * Loops
 ```lisp
@@ -182,40 +182,40 @@
 ```lisp
 ; Iterate over each symbol
 ; Could be used with (iterate ...) command
-(str-iterate "Hello!")
+(str.iterate "Hello!")
 
 ; Join list of strings with "+" symbol. You can set whatever you want
-(str-join
+(str.join
     (list.new of("Hi", "Jack", "Mary"))
     "+"
 )
 
 ; Concatenation
-(concat "A" "B" "C")
+(str.concat "A" "B" "C")
 
 ; Turn everything to string
-(str obj)
+(str.str obj)
 
 ; Get substring from->to
-(str-sub "***Ihor*****" 3 7) ; Will return "Ihor"
+(str.sub "***Ihor*****" 3 7) ; Will return "Ihor"
 
 ; Split string by separator
 ; Will return list of splitted strings by symbol
-(str-split "a,b,c" ",") ; will return list["a" "b" "c"]
+(str.split "a,b,c" ",") ; will return list["a" "b" "c"]
 
 ; Split string by separator with limit
-(str-split "a,b,c" "," 2) ; will return list["a" "b,c"]
+(str.split "a,b,c" "," 2) ; will return list["a" "b,c"]
 
 ; Finds first index of "b" in "abc"
 ; will return -1 if not found
-(str-find "abc" "b") ; will return 1
+(str.find "abc" "b") ; will return 1
 
 ; Get character at some position
 ; Will return "" if out of bounds
-(str-at "abc" 1) ; will return "b"
+(str.at "abc" 1) ; will return "b"
 
 ; Replace substring to another
-(str-rep "Ihaoer" "aoe" "o") ; will return "Ihor"
+(str.rep "Ihaoer" "aoe" "o") ; will return "Ihor"
 ```
 * Assertion
 ```lisp
@@ -261,15 +261,15 @@
 ```lisp
 ; Function (parse text)
 (set parse (def t (do
-    (set arr (list))
-    (set acc (dict.new (with "value" (list))))
+    (set arr (list.new))
+    (set acc (dict.new (with "value" (list.new))))
 
-    (iterate (str-iterate (concat t " ")) c (do
+    (iterate (str.iterate (str.concat t " ")) c (do
         (if (or (eq c " ") (eq c "\t")) (do
-            (list-add arr (str-join acc.value ""))
-            (dict.set acc "value" (list))
+            (list.add arr (str.join acc.value ""))
+            (dict.set acc "value" (list.new))
         ) (do
-            (list-add acc.value c)
+            (list.add acc.value c)
         ))
     ))
 
