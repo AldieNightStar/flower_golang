@@ -217,6 +217,11 @@
 ; Replace substring to another
 (str.rep "Ihaoer" "aoe" "o") ; will return "Ihor"
 ```
+* Time
+```lisp
+; Sleep one second
+(time.sleep 1000)
+```
 * Assertion
 ```lisp
 ; Assert that 2+2=4
