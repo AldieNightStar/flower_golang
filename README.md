@@ -254,6 +254,17 @@
 ; returns list of dicts with [name, size, isfile]
 (fs.list "./")
 ```
+* Nullable operations
+```lisp
+; If bool is true then return result1, otherwise result2
+(maybe bool result1 result2)
+
+; If value is nil then return defaultVal, otherwise value itself
+(nil-def value defaultVal)
+
+; True if value is nil
+(is-nil value)
+```
 * OOP
 ```lisp
 ; Create super type

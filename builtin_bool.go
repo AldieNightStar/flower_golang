@@ -1,6 +1,8 @@
 package flower
 
-import "github.com/AldieNightStar/golisper"
+import (
+	"github.com/AldieNightStar/golisper"
+)
 
 func builtinBool(s *Scope) {
 	s.Memory["true"] = true
@@ -45,6 +47,54 @@ func builtinBool(s *Scope) {
 			return nil, err
 		}
 		return val != nil, nil
+	})
+	s.Memory["maybe"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 3 {
+			return nil, errNotEnoughArgs(s.LastLine, "not operation", 3, len(args))
+		}
+		b, err := EvalCast("maybe operator", s, args[0], false)
+		if err != nil {
+			return nil, err
+		}
+		val1, err := s.Eval(args[1])
+		if err != nil {
+			return nil, err
+		}
+		val2, err := s.Eval(args[2])
+		if err != nil {
+			return nil, err
+		}
+		if b {
+			return val1, nil
+		}
+		return val2, nil
+	})
+	s.Memory["is-nil"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "isnull", 1, 0)
+		}
+		val, err := s.Eval(args[0])
+		if err != nil {
+			return nil, err
+		}
+		return val == nil, nil
+	})
+	s.Memory["nil-def"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "isnull", 2, len(args))
+		}
+		val1, err := s.Eval(args[0])
+		if err != nil {
+			return nil, err
+		}
+		val2, err := s.Eval(args[1])
+		if err != nil {
+			return nil, err
+		}
+		if val1 == nil {
+			return val2, nil
+		}
+		return val1, nil
 	})
 }
 
