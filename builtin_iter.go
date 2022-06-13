@@ -45,10 +45,13 @@ func builtinIter(s *Scope) {
 		scope.Memory["break"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 			toBreak = true
 			scope.Pos = 0xFFFFFFFF
+			s.Pos = 0xFFFFFFFF
+			s.IsEnded = true
 			return nil, nil
 		})
 		scope.Memory["continue"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 			scope.Pos = 0xFFFFFFFF
+			s.Pos = 0xFFFFFFFF
 			return nil, nil
 		})
 		for {
