@@ -1,7 +1,7 @@
-(set parse (fs.import "parser.lsp"))
-(print (parse "hello 1 2 DDD"))
-
-(iterate (fs.list "./") f (do
-    (set f.test 123)
-    (print f)
+(set tag (fs.import "constructor.lsp"))
+(set tags (of
+    (tag "print" (of "\"Hello world!\""))
+    (tag "print" (of "\"Hi Jack!\""))
+    (tag "print" (of (tag "add" (of "2" "2"))))
 ))
+(print (list.new tags))
