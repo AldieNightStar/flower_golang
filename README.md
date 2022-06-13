@@ -267,37 +267,31 @@
 ```
 * OOP
 ```lisp
-; Create super type
-(set Profile
-    (dict
-        (with "name" "default")
-        (with "age" 18)
-        (with "getName" (def self (do
-            (return self.name)
-        )))
-        (with "getAge" (def self (do
-            (return self.age)
-        )))
-    )
-)
+; Super type (Class)
+(set User (dict.new
+    (with "name" "Default")
+    (with "age" 0)
+    (with "getName" (def self (do
+        (return self.name)
+    )))
+    (with "getAge" (def self (do
+        (return self.age)
+    )))
+))
 
-; Create User dictionary
-; It extends Profile dict. So if values not found in User, it will find in Profile
-(set User
-    (dict
-        (extends Profile)
-        (with "name" "Ihor")
-        (with "age" 18)
-    )
-)
+; Create new user
+(set usr1 (dict.new
+    (extends User) ; Basic inheritanse
+    (with "name" "Ihor")
+    (with "age" 18)
+))
 
-; Call functions
-(print (User.getName User))
-(print (User.getAge User))
+(print (usr1.getName usr1))
+(print (usr1.getAge usr1))
 ```
 
 # Sample
-* Real working parser in `flower`
+* Real working lexer in `flower`
 ```lisp
 ; Function (parse text)
 (set parse (def t (do
@@ -307,7 +301,7 @@
     (iterate (str.iterate (str.concat t " ")) c (do
         (if (or (eq c " ") (eq c "\t")) (do
             (list.add arr (str.join acc.value ""))
-            (dict.set acc "value" (list.new))
+            (set acc.value (list.new))
         ) (do
             (list.add acc.value c)
         ))
@@ -316,11 +310,6 @@
     (return arr)
 )))
 
-; Call the parser (parse text)
-(print (parse "Hello world and all inside"))
-
-; Iterate over parser's result. Will iterate every word
-(iterate (parse "This is the parsed array") word (do
-    (print word)
-))
+; Will return: LIST [[0] = hello, [1] = world, [2] = and, [3] = all]
+(print (parse "hello world and all"))
 ```
