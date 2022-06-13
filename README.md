@@ -158,6 +158,11 @@
     (if (greater i 100) (do (break)))
     (print i)
 ))
+
+; Forever loop
+(iterate (infinite) i (do
+    ; ...
+))
 ```
 * Strings
 ```lisp

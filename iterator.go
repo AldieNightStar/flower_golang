@@ -106,9 +106,6 @@ func (it *builtinArrayIteration) Iterate() (any, error) {
 // ====================================
 // ====================================
 
-// Iteration() builtinIteration
-// Iterate() (any, error)
-
 type builtinStringIterator struct {
 	str string
 }
@@ -129,4 +126,26 @@ func (it *buitlinStringIteration) Iterate() (any, error) {
 	res := it.iter.str[it.pos : it.pos+1]
 	it.pos += 1
 	return res, nil
+}
+
+// ====================================
+// ====================================
+
+// Iteration() builtinIteration
+// Iterate() (any, error)
+
+type builtinForeverIterator int8
+
+func (builtinForeverIterator) Iteration() builtinIteration {
+	r := new(builtinForeverIteration)
+	*r = 0
+	return r
+}
+
+type builtinForeverIteration int
+
+func (n *builtinForeverIteration) Iterate() (any, error) {
+	r := *n
+	*n += 1
+	return float64(r), nil
 }

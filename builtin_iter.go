@@ -22,6 +22,9 @@ func builtinIter(s *Scope) {
 		}
 		return &builtinRangeIterator{int(start), int(end)}, nil
 	})
+	s.Memory["infinite"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		return builtinForeverIterator(0), nil
+	})
 	s.Memory["iterate"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (iterate iterator item block)
 		if len(args) < 3 {
@@ -39,11 +42,15 @@ func builtinIter(s *Scope) {
 		iteration := iter.Iteration()
 		toBreak := false
 		scope := block.Load(s, nil)
-		scope.Memory["break"] = func(s *Scope, args []*golisper.Value) (any, error) {
+		scope.Memory["break"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 			toBreak = true
-			s.Pos = 0xFFFFFFFF
+			scope.Pos = 0xFFFFFFFF
 			return nil, nil
-		}
+		})
+		scope.Memory["continue"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+			scope.Pos = 0xFFFFFFFF
+			return nil, nil
+		})
 		for {
 			item, err := iteration.Iterate()
 			if err != nil {

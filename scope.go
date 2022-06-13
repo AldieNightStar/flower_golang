@@ -75,7 +75,7 @@ func (s *Scope) Eval(tok any) (any, error) {
 		tagName := tag.Name
 		f := s.GetFuncFromVariables(tagName)
 		if f == nil {
-			return nil, fmt.Errorf("api function '%s' is not exist. Line: %d", tagName, tag.Line)
+			return nil, fmt.Errorf("function '%s' is not exist. Line: %d", tagName, tag.Line)
 		}
 		return f(s, tag.Values)
 	} else if val, valOk := tok.(*golisper.Value); valOk {
