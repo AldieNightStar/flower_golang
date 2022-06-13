@@ -3,7 +3,24 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 type builtinDictStruct struct {
-	m map[string]any
+	m     map[string]any
+	super *builtinDictStruct
+}
+
+func (d *builtinDictStruct) GetValue(name string) any {
+	val, ok := d.m[name]
+	if !ok {
+		// May be try to find in super dict
+		if d.super != nil {
+			return d.super.GetValue(name)
+		}
+		return nil
+	}
+	return val
+}
+
+type builtinExtends struct {
+	dict *builtinDictStruct
 }
 
 func builtinDict(s *Scope) {
@@ -12,8 +29,13 @@ func builtinDict(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
+		ext := utilFindExtendsTag(evaled)
 		dict := utilCollectKeyValsToMap(evaled)
-		return &builtinDictStruct{dict}, nil
+		dictSturct := &builtinDictStruct{dict, nil}
+		if ext != nil {
+			dictSturct.super = ext.dict
+		}
+		return dictSturct, nil
 	})
 	s.Memory["dict-get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
@@ -27,8 +49,8 @@ func builtinDict(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		item, ok := dict.m[name]
-		if !ok {
+		item := dict.GetValue(name)
+		if item == nil {
 			if len(args) > 2 {
 				defVal, err := s.Eval(args[2])
 				if err != nil {
@@ -78,5 +100,15 @@ func builtinDict(s *Scope) {
 			return nil, err
 		}
 		return &builtinDictKeysIterator{dict: dict}, nil
+	})
+	s.Memory["extends"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "extends", 1, 0)
+		}
+		dict, err := EvalCast[*builtinDictStruct]("extends", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return &builtinExtends{dict}, nil
 	})
 }

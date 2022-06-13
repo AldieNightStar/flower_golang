@@ -1,13 +1,23 @@
-(set api
+(set Profile
     (dict
-        (with "print" print)
-        (with "printCool" (def t (do
-            (print "-------------------------------")
-            (print t)
-            (print "-------------------------------")
+        (with "name" "default")
+        (with "age" 18)
+        (with "getName" (def self (do
+            (return self.name)
+        )))
+        (with "getAge" (def self (do
+            (return self.age)
         )))
     )
 )
+(set User
+    (dict
+        (extends Profile)
+        (with "name" "Ihor")
+        (with "age" 18)
+    )
+)
 
-(api.print "Hello!")
-(api.printCool "Hello sir!")
+(print (User.getName User))
+(print (User.getAge User))
+(print (dict-get User "getAge"))

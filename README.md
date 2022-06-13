@@ -266,3 +266,33 @@
     (print word)
 ))
 ```
+* OOP
+```lisp
+; Create super type
+(set Profile
+    (dict
+        (with "name" "default")
+        (with "age" 18)
+        (with "getName" (def self (do
+            (return self.name)
+        )))
+        (with "getAge" (def self (do
+            (return self.age)
+        )))
+    )
+)
+
+; Create User dictionary
+; It extends Profile dict. So if values not found in User, it will find in Profile
+(set User
+    (dict
+        (extends Profile)
+        (with "name" "Ihor")
+        (with "age" 18)
+    )
+)
+
+; Call functions
+(print (User.getName User))
+(print (User.getAge User))
+```

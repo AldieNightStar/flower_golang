@@ -99,6 +99,15 @@ func utilCollectKeyValsToMap(vals []any) map[string]any {
 	return mp
 }
 
+func utilFindExtendsTag(vals []any) *builtinExtends {
+	for _, val := range vals {
+		if e, eok := val.(*builtinExtends); eok {
+			return e
+		}
+	}
+	return nil
+}
+
 func utilReadPathVariableName(str string) []string {
 	if !strings.Contains(str, ".") {
 		return nil
@@ -113,11 +122,7 @@ func utilEvalPathVariable(s *Scope, path []string) (any, error) {
 		if id == 0 {
 			val = s.GetVariableValue(name)
 		} else {
-			var ok bool
-			val, ok = d.m[name]
-			if !ok {
-				val = nil
-			}
+			val = d.GetValue(name)
 		}
 		if id == len(path)-1 { // If last
 			return val, nil
