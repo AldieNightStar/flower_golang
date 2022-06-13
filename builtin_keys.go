@@ -7,6 +7,10 @@ type keyval struct {
 	val any
 }
 
+type builtinExtends struct {
+	dict *builtinDictStruct
+}
+
 func builtinKeyVal(s *Scope) {
 	s.Memory["with"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
@@ -21,5 +25,15 @@ func builtinKeyVal(s *Scope) {
 			return nil, err
 		}
 		return &keyval{key, val}, nil
+	})
+	s.Memory["extends"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "extends", 1, 0)
+		}
+		dict, err := EvalCast[*builtinDictStruct]("extends", s, args[0], nil)
+		if err != nil {
+			return nil, err
+		}
+		return &builtinExtends{dict}, nil
 	})
 }

@@ -1,23 +1,24 @@
-(set Profile
-    (dict.new
-        (with "name" "default")
-        (with "age" 18)
-        (with "getName" (def self (do
-            (return self.name)
-        )))
-        (with "getAge" (def self (do
-            (return self.age)
-        )))
-    )
-)
-(set User
-    (dict.new
-        (extends Profile)
-        (with "name" "Ihor")
-        (with "age" 18)
-    )
-)
+; Function (parse text)
+(set parse (def t (do
+    (set arr (list))
+    (set acc (dict.new (with "value" (list))))
 
-(print (User.getName User))
-(print (User.getAge User))
-(print (dict.get User "getAge"))
+    (iterate (str-iterate (concat t " ")) c (do
+        (if (or (eq c " ") (eq c "\t")) (do
+            (list-add arr (str-join acc.value ""))
+            (dict.set acc "value" (list))
+        ) (do
+            (list-add acc.value c)
+        ))
+    ))
+
+    (return arr)
+)))
+
+; Call the parser (parse text)
+(print (parse "Hello world and all inside"))
+
+; Iterate over parser's result. Will iterate every word
+(iterate (parse "This is the parsed array") word (do
+    (print word)
+))

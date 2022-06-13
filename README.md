@@ -83,7 +83,7 @@
 ```lisp
 ; Create dictionary
 (set profile
-    (dict
+    (dict.new
         (with "name" "Ihor")
         (with "age"  18)
         (with "city" "London")
@@ -91,7 +91,7 @@
 )
 
 ; Get value from dictionary by string
-(dict-get profile "name")
+(dict.get profile "name")
 
 ; Get value from dictionary as variable
 ; You can use '.' to enter in deep. Like: (set name profile.portfolio.name)
@@ -99,19 +99,19 @@
 
 ; Set value to the dictionary
 ; DO NOT use (set profile.name "Ihor") - it's not allowed
-(dict-set profile "name" "Ihor")
+(dict.set profile "name" "Ihor")
 
 ; Set value to the directory with '.'
 ; Let's say we want to change profile.cities.first = "Lviv"
-(dict-set profile.cities "first" "Lviv")
+(dict.set profile.cities "first" "Lviv")
 
 ; Iterate over dictionary keys
-(iterate (dict-keys profile) key (do
+(iterate (dict.keys profile) key (do
     (print (concat key ":" (get profile key)))
 ))
 
 ; Get length of dictionary
-(dict-len profile)
+(dict.len profile)
 
 ; Extender. When value not found it will look in extending dict
 (dict (extends profile))
@@ -225,51 +225,6 @@
 ; Assert with message
 (assert (eq (add 2 2) 4) "2 + 2 should be 4")
 ```
-* Cells
-    * Helps to overcome interscope variable savings
-    * Can be modified accross the scopes
-```lisp
-; Create empty cell
-(set c (cell))
-
-; Create cell with value
-(set c (cell 123))
-
-; Get cell value
-(cell-get c)
-
-; Set cell value
-(cell-set c 111)
-```
-
-# Sample
-* Real working parser in `flower`
-```lisp
-; Function (parse text)
-(set parse (def t (do
-    (set arr (list))
-    (set acc (cell (list)))
-
-    (iterate (str-iterate (concat t " ")) c (do
-        (if (or (eq c " ") (eq c "\t")) (do
-            (list-add arr (str-join (cell-get acc) ""))
-            (cell-set acc (list))
-        ) (do
-            (list-add (cell-get acc) c)
-        ))
-    ))
-
-    (return arr)
-)))
-
-; Call the parser (parse text)
-(print (parse "Hello world and all inside"))
-
-; Iterate over parser's result. Will iterate every word
-(iterate (parse "This is the parsed array") word (do
-    (print word)
-))
-```
 * OOP
 ```lisp
 ; Create super type
@@ -299,4 +254,33 @@
 ; Call functions
 (print (User.getName User))
 (print (User.getAge User))
+```
+
+# Sample
+* Real working parser in `flower`
+```lisp
+; Function (parse text)
+(set parse (def t (do
+    (set arr (list))
+    (set acc (dict.new (with "value" (list))))
+
+    (iterate (str-iterate (concat t " ")) c (do
+        (if (or (eq c " ") (eq c "\t")) (do
+            (list-add arr (str-join acc.value ""))
+            (dict.set acc "value" (list))
+        ) (do
+            (list-add acc.value c)
+        ))
+    ))
+
+    (return arr)
+)))
+
+; Call the parser (parse text)
+(print (parse "Hello world and all inside"))
+
+; Iterate over parser's result. Will iterate every word
+(iterate (parse "This is the parsed array") word (do
+    (print word)
+))
 ```

@@ -26,10 +26,6 @@ func (d *builtinDictStruct) GetValue(name string) any {
 	return val
 }
 
-type builtinExtends struct {
-	dict *builtinDictStruct
-}
-
 func builtinDict(s *Scope) {
 	d := newBuitinDict()
 	d.m["new"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
@@ -47,9 +43,9 @@ func builtinDict(s *Scope) {
 	})
 	d.m["get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "dict-get", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "dict get", 2, len(args))
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict-get", s, args[0], nil)
+		dict, err := EvalCast[*builtinDictStruct]("dict get", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
@@ -66,19 +62,19 @@ func builtinDict(s *Scope) {
 				}
 				return defVal, nil
 			}
-			return nil, newErrLineName(s.LastLine, "dict-get", "Key '"+name+"' not found in dict")
+			return nil, newErrLineName(s.LastLine, "dict get", "Key '"+name+"' not found in dict")
 		}
 		return item, nil
 	})
 	d.m["set"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 3 {
-			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 3, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "dict set", 3, len(args))
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict-set", s, args[0], nil)
+		dict, err := EvalCast[*builtinDictStruct]("dict set", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
-		name, err := EvalCast("dict-set", s, args[1], "")
+		name, err := EvalCast("dict set", s, args[1], "")
 		if err != nil {
 			return nil, err
 		}
@@ -91,9 +87,9 @@ func builtinDict(s *Scope) {
 	})
 	d.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "dict len", 1, 0)
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict-set", s, args[0], nil)
+		dict, err := EvalCast[*builtinDictStruct]("dict len", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
@@ -101,23 +97,13 @@ func builtinDict(s *Scope) {
 	})
 	d.m["keys"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "dict-set", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "dict keys", 1, 0)
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict-set", s, args[0], nil)
+		dict, err := EvalCast[*builtinDictStruct]("dict keys", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
 		return &builtinDictKeysIterator{dict: dict}, nil
-	})
-	s.Memory["extends"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
-		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "extends", 1, 0)
-		}
-		dict, err := EvalCast[*builtinDictStruct]("extends", s, args[0], nil)
-		if err != nil {
-			return nil, err
-		}
-		return &builtinExtends{dict}, nil
 	})
 	s.Memory["dict"] = d
 }
