@@ -1,6 +1,7 @@
 package flower
 
 import (
+	"io/ioutil"
 	"os"
 
 	"github.com/AldieNightStar/golisper"
@@ -59,6 +60,28 @@ func builtinFiles(s *Scope) {
 			return false, nil
 		}
 		return true, nil
+	})
+	fs.m["list"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 1 {
+			return nil, errNotEnoughArgs(s.LastLine, "fs delete", 1, 0)
+		}
+		path, err := EvalCast("fs list", s, args[0], "")
+		if err != nil {
+			return nil, err
+		}
+		dirArr, err := ioutil.ReadDir(path)
+		if err != nil {
+			return nil, err
+		}
+		arr := make([]any, 0, len(dirArr))
+		for _, d := range dirArr {
+			dict := newBuitinDict()
+			dict.m["name"] = d.Name()
+			dict.m["size"] = float64(d.Size())
+			dict.m["isfile"] = !d.IsDir()
+			arr = append(arr, dict)
+		}
+		return &builtinList{arr}, nil
 	})
 	fs.m["import"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {

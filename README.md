@@ -249,6 +249,10 @@
 
 ; Delete the file
 (fs.delete "test.txt")
+
+; Get list of files/folders
+; returns list of dicts with [name, size, isfile]
+(fs.list "./")
 ```
 * OOP
 ```lisp
