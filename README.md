@@ -163,6 +163,8 @@
 (iterate (infinite) i (do
     ; ...
 ))
+
+; (break) and (continue) are also working
 ```
 * Strings
 ```lisp
