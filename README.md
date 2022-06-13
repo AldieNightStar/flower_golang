@@ -186,7 +186,7 @@
 
 ; Join list of strings with "+" symbol. You can set whatever you want
 (str.join
-    (list.new of("Hi", "Jack", "Mary"))
+    (list.new (of "Hi", "Jack", "Mary"))
     "+"
 )
 
