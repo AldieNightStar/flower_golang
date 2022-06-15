@@ -24,7 +24,9 @@ type Scope struct {
 }
 
 func NewScopeWithBuiltIns(code []*golisper.Value, Pos int) *Scope {
-	return NewScope(code, Pos, builtinScope)
+	scope := NewScope(code, Pos, builtinScope)
+	builtinAddReturn(scope)
+	return scope
 }
 
 func NewScope(Code []*golisper.Value, Pos int, Parent *Scope) *Scope {
