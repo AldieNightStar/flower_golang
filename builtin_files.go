@@ -99,6 +99,7 @@ func builtinFiles(s *Scope) {
 		if err != nil {
 			return nil, newErrLineName(s.LastLine, "fs import", "Can't import: "+name+"\n\tReason: "+err.Error())
 		}
+		builtinAddReturn(importScope)
 		res, err := importScope.Run()
 		if err != nil {
 			return nil, newErrLineName(s.LastLine, "fs import", "Can't import: "+name+"\n\tReason: "+err.Error())

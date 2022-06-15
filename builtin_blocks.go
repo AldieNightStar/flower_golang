@@ -25,6 +25,7 @@ func builtinBlocks(s *Scope) {
 			return nil, err
 		}
 		blockScope := block.Load(s, utilCollectKeyValsToMap(evaledArgs))
+		builtinAddReturn(blockScope)
 		return blockScope.Run()
 	})
 	s.Memory["def"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {

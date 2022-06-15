@@ -114,4 +114,18 @@ func builtinIter(s *Scope) {
 		}
 		return arr, nil
 	})
+	s.Memory["generator"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "generator", 2, len(args))
+		}
+		alias := utilReadEtcString(args[0])
+		if alias == "" {
+			return nil, newErrLineName(s.LastLine, "generator", "No alias name or wrong type")
+		}
+		block, err := EvalCast[*codeBlock]("generator", s, args[1], nil)
+		if err != nil {
+			return nil, err
+		}
+		return &builtinBlockIterator{block, alias, s}, nil
+	})
 }

@@ -87,6 +87,7 @@ func utilCodeFuncToSFunc(f *codeFunction) SFunc {
 			with[alias] = evaledArg
 		}
 		scope := f.block.Load(s, with)
+		builtinAddReturn(scope)
 		return scope.Run()
 	}
 }

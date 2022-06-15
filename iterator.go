@@ -131,9 +131,6 @@ func (it *buitlinStringIteration) Iterate() (any, error) {
 // ====================================
 // ====================================
 
-// Iteration() builtinIteration
-// Iterate() (any, error)
-
 type builtinForeverIterator int8
 
 func (builtinForeverIterator) Iteration() builtinIteration {
@@ -148,4 +145,38 @@ func (n *builtinForeverIteration) Iterate() (any, error) {
 	r := *n
 	*n += 1
 	return float64(r), nil
+}
+
+// ====================================
+// ====================================
+
+// Iteration() builtinIteration
+// Iterate() (any, error)
+
+type builtinBlockIterator struct {
+	block  *codeBlock
+	alias  string
+	parent *Scope
+}
+
+func (it *builtinBlockIterator) Iteration() builtinIteration {
+	return &builtinBlockIteration{it, 0}
+}
+
+type builtinBlockIteration struct {
+	iter *builtinBlockIterator
+	ptr  int
+}
+
+func (it *builtinBlockIteration) Iterate() (any, error) {
+	scope := it.iter.block.Load(it.iter.parent, map[string]any{
+		it.iter.alias: float64(it.ptr),
+	})
+	builtinAddReturn(scope)
+	it.ptr += 1
+	res, err := scope.Run()
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }

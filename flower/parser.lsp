@@ -15,4 +15,4 @@
     (return arr)
 )))
 
-(return parse)
+(return (dict.new (with "parse" parse)))
