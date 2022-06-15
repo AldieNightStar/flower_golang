@@ -304,6 +304,33 @@
 ; True if value is nil
 (is-nil value)
 ```
+* Inline operations
+```lisp
+; Sometime need to process some value inline
+
+; Do something with value or before use
+; Value name is 'it'
+; Need to return it back after process (example below)
+(as value (do
+    (print it)
+    (set it (add it 1)) ; Do some mapping
+    (return it)
+))
+
+; Another usage
+(print (str.concat
+    "User name: " (with (get-user-name) (do
+        (if (less (str.len it) 3) (do
+            (return "name too short")
+        ))
+        (return it)
+    ))
+))
+
+; You can split codeblock away
+; Lets say we have another codeblock which turns values to reverse string
+(print (as text reverseBlock))
+```
 * OOP
 ```lisp
 ; Super type (Class)

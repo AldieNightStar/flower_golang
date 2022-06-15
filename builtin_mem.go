@@ -58,4 +58,20 @@ func builtinMem(s *Scope) {
 		}
 		return nil, nil
 	})
+	s.Memory["as"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		if len(args) < 2 {
+			return nil, errNotEnoughArgs(s.LastLine, "with", 2, len(args))
+		}
+		val, err := s.Eval(args[0])
+		if err != nil {
+			return nil, err
+		}
+		block, err := EvalCast[*codeBlock]("with", s, args[1], nil)
+		if err != nil {
+			return nil, err
+		}
+		scope := block.Load(block.scope, map[string]any{"it": val})
+		builtinAddReturn(scope)
+		return scope.Run()
+	})
 }

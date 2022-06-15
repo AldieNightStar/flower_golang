@@ -9,7 +9,7 @@ func errNotEnoughArgs(line int, name string, expected int, curretVal int) error 
 }
 
 func errWrongType(line int, name string, currentType any, expectedType any) error {
-	return newErrLineName(line, name, fmt.Sprintf("Wrong type %T. Expected %T", currentType, expectedType))
+	return newErrLineName(line, name, fmt.Sprintf("Wrong type %s. Expected %s", getTypeOf(currentType), getTypeOf(expectedType)))
 }
 
 func newErrLineName(line int, name string, message string) error {
