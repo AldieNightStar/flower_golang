@@ -133,6 +133,6 @@ func builtinsList(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		return valLen.Len(), nil
+		return float64(valLen.Len()), nil
 	})
 }
