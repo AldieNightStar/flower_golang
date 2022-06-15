@@ -24,9 +24,9 @@ func builtinLoopIf(s *Scope) {
 			}
 		}
 		if b {
-			return block.Load(s, nil).Run()
+			return block.Load(block.scope, nil).Run()
 		} else if elseBlock != nil {
-			return elseBlock.Load(s, nil).Run()
+			return elseBlock.Load(elseBlock.scope, nil).Run()
 		}
 		// TODO: May be some error here?
 		return nil, nil

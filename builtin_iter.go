@@ -41,7 +41,7 @@ func builtinIter(s *Scope) {
 		}
 		iteration := iter.Iteration()
 		toBreak := false
-		scope := block.Load(s, nil)
+		scope := block.Load(block.scope, nil)
 		scope.Memory["break"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 			toBreak = true
 			scope.Pos = 0xFFFFFFFF
