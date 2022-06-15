@@ -116,6 +116,25 @@
 ; Extender. When value not found it will look in extending dict
 (dict (extends profile))
 ```
+* Boxes
+```lisp
+; Language has no any mechanism to assign values upper than it's scope
+; But there is an exit. You could use (box) command.
+; Box is a 1-key based dict. It's SUPER light and almost has no inpact to perfomance
+; Key is "value". So you can change it via (set) command or get the value as from dict
+
+; Create a box
+(set b (box))
+
+; Create a box with inital value
+(set b (box 0))
+
+; Set new value to the box
+(set b.value "Test")
+
+; Get value from the box
+(print b.value)
+```
 * Iterators
 ```lisp
 ; Hardcoded Iterator
