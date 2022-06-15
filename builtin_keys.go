@@ -7,6 +7,10 @@ type keyval struct {
 	val any
 }
 
+func (k *keyval) Type() string {
+	return "keyval"
+}
+
 type builtinExtends struct {
 	dict *builtinDictStruct
 }

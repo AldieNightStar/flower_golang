@@ -8,6 +8,10 @@ import (
 
 type SFunc func(s *Scope, args []*golisper.Value) (any, error)
 
+func (f SFunc) Type() string {
+	return "function"
+}
+
 type Scope struct {
 	Code       []*golisper.Tag
 	Pos        int

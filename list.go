@@ -9,6 +9,10 @@ type builtinList struct {
 	list []any
 }
 
+func (l *builtinList) Type() string {
+	return "list"
+}
+
 func (l *builtinList) Add(elem any) {
 	l.list = append(l.list, elem)
 }

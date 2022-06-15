@@ -29,3 +29,7 @@ func (s *stack[T]) Pop(def T) (T, bool) {
 func (s *stack[T]) Len() int {
 	return s.Ptr
 }
+
+func (s *stack[T]) Type() string {
+	return "stack"
+}

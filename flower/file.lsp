@@ -10,3 +10,5 @@
 
 (print "BENCHMARK")
 (bench)
+
+(print (str.concat "Type of bench is: " (type bench)))

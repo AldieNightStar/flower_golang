@@ -18,3 +18,7 @@ func (b *builtinBox) SetValue(name string, val any) bool {
 	}
 	return false
 }
+
+func (b *builtinBox) Type() string {
+	return "box"
+}

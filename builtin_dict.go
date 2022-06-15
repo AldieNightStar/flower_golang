@@ -48,6 +48,10 @@ func (d *builtinDictStruct) Len() int {
 	return len(d.m)
 }
 
+func (d *builtinDictStruct) Type() string {
+	return "dict"
+}
+
 func builtinDict(s *Scope) {
 	d := newBuitinDict()
 	d.m["new"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {

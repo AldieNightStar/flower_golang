@@ -6,6 +6,10 @@ type codeBlock struct {
 	code []*golisper.Tag
 }
 
+func (b *codeBlock) Type() string {
+	return "block"
+}
+
 func newBlock(code []*golisper.Tag) *codeBlock {
 	return &codeBlock{code}
 }

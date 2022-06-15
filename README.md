@@ -287,6 +287,12 @@
 ; returns list of dicts with [name, size, isfile]
 (fs.list "./")
 ```
+* Types
+```lisp
+; Get value type in string
+(type "Hello!") ; will return "string"
+(type 123) ; will return "number"
+```
 * Nullable operations
 ```lisp
 ; If bool is true then return result1, otherwise result2
