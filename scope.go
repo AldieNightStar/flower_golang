@@ -174,3 +174,7 @@ func (s *Scope) LocalScope(vals []*golisper.Value) *Scope {
 func (s *Scope) AllowFileAccess() {
 	builtinFiles(s)
 }
+
+func (s *Scope) AllowHTTP() {
+	builtinHTTP(s)
+}

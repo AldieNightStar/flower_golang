@@ -355,6 +355,12 @@
 (print (usr1.getName usr1))
 (print (usr1.getAge usr1))
 ```
+* HTTP
+```lisp
+; Send request and get response as string
+; Parameters (strings): Method, URL, BODY
+(http.request "GET" "http://google.com", "")
+```
 
 # Sample
 * Real working lexer in `flower`

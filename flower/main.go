@@ -19,6 +19,7 @@ func main() {
 		return
 	}
 	scope.AllowFileAccess()
+	scope.AllowHTTP()
 	_, err = scope.Run()
 	if err != nil {
 		fmt.Println(err)
