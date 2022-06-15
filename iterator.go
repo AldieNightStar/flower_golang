@@ -75,12 +75,12 @@ func (it *builtinRangeIteration) Iterate() (any, error) {
 // ====================================
 
 type builtinDictKeysIterator struct {
-	dict *builtinDictStruct
+	dict builtinKeysHolder
 }
 
 func (it *builtinDictKeysIterator) Iteration() builtinIteration {
-	arr := make([]any, 0, 32)
-	for k := range it.dict.m {
+	arr := make([]any, 0, 32) // Convert []string -> []any
+	for k := range it.dict.Keys() {
 		arr = append(arr, k)
 	}
 	return &builtinArrayIteration{arr, 0}

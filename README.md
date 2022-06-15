@@ -72,7 +72,7 @@
 (list.add list "Adam")
 
 ; Get length of the list
-(list.len list)
+(len list)
 
 ; iterate over list elements
 (iterate list elem (do
@@ -111,7 +111,7 @@
 ))
 
 ; Get length of dictionary
-(dict.len profile)
+(len profile)
 
 ; Extender. When value not found it will look in extending dict
 (dict (extends profile))
@@ -174,7 +174,7 @@
 (stack.pop s)
 
 ; Get length of the stack
-(stack.len s)
+(len s)
 ```
 * Loops
 ```lisp

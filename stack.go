@@ -25,3 +25,7 @@ func (s *stack[T]) Pop(def T) (T, bool) {
 	s.Ptr -= 1
 	return s.Data[s.Ptr], true
 }
+
+func (s *stack[T]) Len() int {
+	return s.Ptr
+}

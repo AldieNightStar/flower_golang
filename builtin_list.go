@@ -74,16 +74,6 @@ func builtinsList(s *Scope) {
 		list.Add(newVal)
 		return newVal, nil
 	})
-	listDict.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
-		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "list len", 1, 0)
-		}
-		list, err := EvalCast[*builtinList]("list len", s, args[0], nil)
-		if err != nil {
-			return nil, err
-		}
-		return float64(len(list.list)), nil
-	})
 	s.Memory["list"] = listDict
 
 	stackDict := newBuitinDict()
@@ -133,15 +123,16 @@ func builtinsList(s *Scope) {
 		}
 		return stack.Push(val), nil
 	})
-	stackDict.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+	s.Memory["stack"] = stackDict
+
+	s.Memory["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "stack len", 1, 0)
+			return nil, errNotEnoughArgs(s.LastLine, "len", 1, 0)
 		}
-		stack, err := EvalCast[*stack[any]]("stack len", s, args[0], nil)
+		valLen, err := EvalCast[builtinValueLen]("len", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
-		return float64(stack.Ptr), nil
+		return valLen.Len(), nil
 	})
-	s.Memory["stack"] = stackDict
 }

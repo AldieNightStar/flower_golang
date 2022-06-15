@@ -26,8 +26,8 @@ func builtinMem(s *Scope) {
 			if err != nil {
 				return nil, err
 			}
-			if dict, ok := val.(*builtinDictStruct); ok {
-				dict.m[key] = newVal
+			if dict, ok := val.(builtinValuesSetter); ok {
+				dict.SetValue(key, newVal)
 				return nil, nil
 			}
 			return nil, newErrLineName(s.LastLine, "set", "Can't set value inside non-dict")

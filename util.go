@@ -119,13 +119,13 @@ func utilReadPathVariableName(str string) []string {
 }
 
 func utilEvalPathVariable(s *Scope, path []string) (any, error) {
-	var d *builtinDictStruct
+	var holder builtinValuesGetter
 	var val any
 	for id, name := range path {
 		if id == 0 {
 			val = s.GetVariableValue(name)
 		} else {
-			val = d.GetValue(name)
+			val = holder.GetValue(name)
 		}
 		if id == len(path)-1 { // If last
 			return val, nil
@@ -133,11 +133,11 @@ func utilEvalPathVariable(s *Scope, path []string) (any, error) {
 		if val == nil {
 			return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to nil in the middle: "+name)
 		}
-		if dictVal, dictOk := val.(*builtinDictStruct); dictOk {
-			d = dictVal
+		if valHolder, valHolderOk := val.(builtinValuesGetter); valHolderOk {
+			holder = valHolder
 			continue
 		}
-		return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to a non dict value in the middle: "+name)
+		return nil, newErrLineName(s.LastLine, "variable path", "Variable path leads to a non dict/holder value in the middle: "+name)
 	}
 	return nil, nil
 }

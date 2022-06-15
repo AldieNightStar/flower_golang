@@ -39,6 +39,15 @@ func (d *builtinDictStruct) GetValue(name string) any {
 	return val
 }
 
+func (d *builtinDictStruct) SetValue(name string, val any) bool {
+	d.m[name] = val
+	return true
+}
+
+func (d *builtinDictStruct) Len() int {
+	return len(d.m)
+}
+
 func builtinDict(s *Scope) {
 	d := newBuitinDict()
 	d.m["new"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
@@ -58,7 +67,7 @@ func builtinDict(s *Scope) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict get", 2, len(args))
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict get", s, args[0], nil)
+		valGetter, err := EvalCast[builtinValuesGetter]("dict get", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +75,7 @@ func builtinDict(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		item := dict.GetValue(name)
+		item := valGetter.GetValue(name)
 		if item == nil {
 			if len(args) > 2 {
 				defVal, err := s.Eval(args[2])
@@ -83,7 +92,7 @@ func builtinDict(s *Scope) {
 		if len(args) < 3 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict set", 3, len(args))
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict set", s, args[0], nil)
+		setter, err := EvalCast[builtinValuesSetter]("dict set", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
@@ -95,28 +104,32 @@ func builtinDict(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		dict.m[name] = val
+		ok := setter.SetValue(name, val)
+		if !ok {
+			return nil, newErrLineName(s.LastLine, "dict set", "Can't set the element: "+name)
+		}
 		return val, nil
-	})
-	d.m["len"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
-		if len(args) < 1 {
-			return nil, errNotEnoughArgs(s.LastLine, "dict len", 1, 0)
-		}
-		dict, err := EvalCast[*builtinDictStruct]("dict len", s, args[0], nil)
-		if err != nil {
-			return nil, err
-		}
-		return float64(len(dict.m)), nil
 	})
 	d.m["keys"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
 			return nil, errNotEnoughArgs(s.LastLine, "dict keys", 1, 0)
 		}
-		dict, err := EvalCast[*builtinDictStruct]("dict keys", s, args[0], nil)
+		dict, err := EvalCast[builtinKeysHolder]("dict keys", s, args[0], nil)
 		if err != nil {
 			return nil, err
 		}
 		return &builtinDictKeysIterator{dict: dict}, nil
 	})
 	s.Memory["dict"] = d
+	s.Memory["box"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		var val any = nil
+		if len(args) > 0 {
+			v, err := s.Eval(args[0])
+			if err != nil {
+				return nil, err
+			}
+			val = v
+		}
+		return &builtinBox{val}, nil
+	})
 }

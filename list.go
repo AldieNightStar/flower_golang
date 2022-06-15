@@ -32,10 +32,14 @@ func (l *builtinList) Iteration() builtinIteration {
 	return &builtinArrayIteration{l.list, 0}
 }
 
-func (d builtinList) String() string {
+func (l builtinList) String() string {
 	arr := make([]string, 0, 8)
-	for k, v := range d.list {
+	for k, v := range l.list {
 		arr = append(arr, fmt.Sprintf("[%d] = ", k)+fmt.Sprint(v))
 	}
 	return "LIST [" + strings.Join(arr, ", ") + "]"
+}
+
+func (l *builtinList) Len() int {
+	return len(l.list)
 }
