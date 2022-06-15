@@ -106,6 +106,13 @@ func builtinFiles(s *Scope) {
 		}
 		return res, nil
 	})
+	fs.m["args"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
+		arr := make([]any, 0, 8)
+		for _, a := range os.Args[0:] {
+			arr = append(arr, a)
+		}
+		return builtinList{arr}, nil
+	})
 
 	s.Memory["fs"] = fs
 }

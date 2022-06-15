@@ -286,6 +286,9 @@
 ; Get list of files/folders
 ; returns list of dicts with [name, size, isfile]
 (fs.list "./")
+
+; Get system arguments from command line. All are strings
+(fs.args)
 ```
 * Types
 ```lisp
