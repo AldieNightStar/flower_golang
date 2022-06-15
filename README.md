@@ -401,3 +401,29 @@
 ; Will return: LIST [[0] = hello, [1] = world, [2] = and, [3] = all]
 (print (parse "hello world and all"))
 ```
+
+# Closures
+* You can create functions inside functions
+```lisp
+(set counter (def n (do
+	(set cnt (box n))
+	(return (def (do
+		(set cnt.value (add cnt.value 1))
+		(return cnt.value)
+	)))
+)))
+
+(set c1 (counter 32))
+(set c2 (counter 16))
+
+(print (c1))
+(print (c2))
+(print (c1))
+(print (c2))
+
+; Output:
+;   33
+;   17
+;   34
+;   18
+```
