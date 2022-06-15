@@ -371,6 +371,13 @@
 ; Returns nil if nothing bad happened
 (safe (do ...))
 ```
+* MultiThreading
+```lisp
+; Run code block in another thread
+; WARNING - errors will not be shown. You had to track them manualy with 'safe' command
+(thread (do ...))
+```
+
 # Sample
 * Real working lexer in `flower`
 ```lisp

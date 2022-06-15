@@ -21,6 +21,7 @@ var builtinScope = (func() *Scope {
 	builtinAssert(scope)
 	builtinType(scope)
 	builtinErrors(scope)
+	builtinThreading(scope)
 
 	return scope
 })()

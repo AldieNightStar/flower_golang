@@ -40,5 +40,11 @@ func getTypeOf(a any) string {
 	if _, ok := a.(error); ok {
 		return "error"
 	}
+	if _, ok := a.(builtinIterator); ok {
+		return "iterator"
+	}
+	if _, ok := a.(builtinIteration); ok {
+		return "iteration"
+	}
 	return fmt.Sprintf("%T", a)
 }
