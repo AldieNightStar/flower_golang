@@ -37,5 +37,8 @@ func getTypeOf(a any) string {
 	if _, ok := a.(bool); ok {
 		return "bool"
 	}
+	if _, ok := a.(error); ok {
+		return "error"
+	}
 	return fmt.Sprintf("%T", a)
 }

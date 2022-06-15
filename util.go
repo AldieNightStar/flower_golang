@@ -48,6 +48,17 @@ func EvalCast[T any](commandName string, s *Scope, val any, def T) (T, error) {
 	return def, errWrongType(s.LastLine, commandName, val, def)
 }
 
+func EvalCastMust[T any](commandName string, s *Scope, val any, def T) T {
+	e, err := s.Eval(val)
+	if err != nil {
+		panic(err)
+	}
+	if o, ok := e.(T); ok {
+		return o
+	}
+	panic(errWrongType(s.LastLine, commandName, val, def))
+}
+
 func utilValuesToTags(vals []*golisper.Value) []*golisper.Tag {
 	tags := make([]*golisper.Tag, 0, len(vals))
 	for _, t := range vals {

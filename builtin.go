@@ -20,6 +20,7 @@ var builtinScope = (func() *Scope {
 	builtinString(scope)
 	builtinAssert(scope)
 	builtinType(scope)
+	builtinErrors(scope)
 
 	return scope
 })()

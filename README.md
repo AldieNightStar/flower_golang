@@ -361,7 +361,16 @@
 ; Parameters (strings): Method, URL, BODY
 (http.request "GET" "http://google.com", "")
 ```
+* Errors
+```lisp
+; Raise the error
+(error "Name is wrong")
 
+; Run code safely
+; If some error - it will return it without program crashing
+; Returns nil if nothing bad happened
+(safe (do ...))
+```
 # Sample
 * Real working lexer in `flower`
 ```lisp
