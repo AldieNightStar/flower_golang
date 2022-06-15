@@ -144,6 +144,20 @@
 
 ; Poll remain items one by one into a list
 (next-all iter)
+
+; Create generator
+; It returns values and get counter increased
+; If it will return nil value then iteration ends
+(generator pos (do ...))
+
+; Generator sample. Will stop if pos is more than 10
+; This generator returns multiplied by 2 numbers
+(set api.multiplied (generator pos (do
+    (if (greater pos 10) (do
+        (return nil)
+    ))
+    (return (mul pos 2))
+)))
 ```
 * Stacks
 ```lisp

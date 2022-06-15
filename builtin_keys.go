@@ -16,7 +16,7 @@ func builtinKeyVal(s *Scope) {
 		if len(args) < 2 {
 			return nil, errNotEnoughArgs(s.LastLine, "with", 2, len(args))
 		}
-		key, err := EvalCast[string]("with", s, args[0], "")
+		key, err := EvalCast("with", s, args[0], "")
 		if err != nil {
 			return nil, err
 		}
