@@ -3,15 +3,16 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 type codeBlock struct {
-	code []*golisper.Tag
+	code  []*golisper.Tag
+	scope *Scope
 }
 
 func (b *codeBlock) Type() string {
 	return "block"
 }
 
-func newBlock(code []*golisper.Tag) *codeBlock {
-	return &codeBlock{code}
+func newBlock(scope *Scope, code []*golisper.Tag) *codeBlock {
+	return &codeBlock{code, scope}
 }
 
 func (b *codeBlock) Load(parent *Scope, with map[string]any) *Scope {

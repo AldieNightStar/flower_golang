@@ -5,11 +5,12 @@ import "github.com/AldieNightStar/golisper"
 type codeFunction struct {
 	aliases []string
 	block   *codeBlock
+	scope   *Scope
 }
 
 func builtinBlocks(s *Scope) {
 	s.Memory["do"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
-		return newBlock(utilValuesToTags(args)), nil
+		return newBlock(s, utilValuesToTags(args)), nil
 	})
 	s.Memory["call"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (call block (with k val) (with k val))
@@ -24,7 +25,7 @@ func builtinBlocks(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		blockScope := block.Load(s, utilCollectKeyValsToMap(evaledArgs))
+		blockScope := block.Load(block.scope, utilCollectKeyValsToMap(evaledArgs))
 		builtinAddReturn(blockScope)
 		return blockScope.Run()
 	})
@@ -49,6 +50,7 @@ func builtinBlocks(s *Scope) {
 		codeFunc := &codeFunction{
 			aliases: aliases,
 			block:   block,
+			scope:   s,
 		}
 		return utilCodeFuncToSFunc(codeFunc), nil
 	})

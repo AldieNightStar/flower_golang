@@ -80,13 +80,13 @@ func utilCodeFuncToSFunc(f *codeFunction) SFunc {
 		}
 		with := make(map[string]any)
 		for id, alias := range f.aliases {
-			evaledArg, err := s.Eval(args[id])
+			evaledArg, err := f.scope.Eval(args[id])
 			if err != nil {
 				return nil, err
 			}
 			with[alias] = evaledArg
 		}
-		scope := f.block.Load(s, with)
+		scope := f.block.Load(f.scope, with)
 		builtinAddReturn(scope)
 		return scope.Run()
 	}
