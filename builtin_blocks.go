@@ -10,7 +10,7 @@ type codeFunction struct {
 
 func builtinBlocks(s *Scope) {
 	s.Memory["do"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
-		return newBlock(s, utilValuesToTags(args)), nil
+		return newBlock(s, args), nil
 	})
 	s.Memory["call"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		// (call block (with k val) (with k val))

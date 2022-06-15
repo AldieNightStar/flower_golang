@@ -13,7 +13,7 @@ func (f SFunc) Type() string {
 }
 
 type Scope struct {
-	Code       []*golisper.Tag
+	Code       []*golisper.Value
 	Pos        int
 	Parent     *Scope
 	Memory     map[string]any
@@ -23,11 +23,11 @@ type Scope struct {
 	LastLine   int
 }
 
-func NewScopeWithBuiltIns(code []*golisper.Tag, Pos int) *Scope {
+func NewScopeWithBuiltIns(code []*golisper.Value, Pos int) *Scope {
 	return NewScope(code, Pos, builtinScope)
 }
 
-func NewScope(Code []*golisper.Tag, Pos int, Parent *Scope) *Scope {
+func NewScope(Code []*golisper.Value, Pos int, Parent *Scope) *Scope {
 	return &Scope{
 		Code:       Code,
 		Pos:        Pos,
@@ -168,7 +168,7 @@ func (s *Scope) Run() (res any, err error) {
 }
 
 func (s *Scope) LocalScope(vals []*golisper.Value) *Scope {
-	return NewScope(utilValuesToTags(vals), 0, s)
+	return NewScope(vals, 0, s)
 }
 
 func (s *Scope) AllowFileAccess() {

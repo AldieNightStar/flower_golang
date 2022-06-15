@@ -20,16 +20,6 @@ func utilIgnoreHashBangAtStart(src string) string {
 	return src
 }
 
-func utilReadTagValues(val *golisper.Value, name string) []*golisper.Value {
-	if val.Type != golisper.TYPE_TAG {
-		return nil
-	}
-	if val.TagVal.Name != name {
-		return nil
-	}
-	return val.TagVal.Values
-}
-
 func utilReadEtcString(val *golisper.Value) string {
 	if val == nil || val.Type != golisper.TYPE_ETC_STRING {
 		return ""
@@ -57,31 +47,6 @@ func EvalCastMust[T any](commandName string, s *Scope, val any, def T) T {
 		return o
 	}
 	panic(errWrongType(s.LastLine, commandName, val, def))
-}
-
-func utilValuesToTags(vals []*golisper.Value) []*golisper.Tag {
-	tags := make([]*golisper.Tag, 0, len(vals))
-	for _, t := range vals {
-		if t.Type == golisper.TYPE_TAG {
-			tags = append(tags, t.TagVal)
-		}
-	}
-	return tags
-}
-
-func utilReadTag(val *golisper.Value) *golisper.Tag {
-	if val == nil || val.Type != golisper.TYPE_TAG {
-		return nil
-	}
-	return val.TagVal
-}
-
-func utilReadTagWithName(name string, val *golisper.Value) *golisper.Tag {
-	tag := utilReadTag(val)
-	if tag == nil || tag.Name != name {
-		return nil
-	}
-	return tag
 }
 
 func utilCodeFuncToSFunc(f *codeFunction) SFunc {

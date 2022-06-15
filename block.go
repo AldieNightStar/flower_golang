@@ -3,7 +3,7 @@ package flower
 import "github.com/AldieNightStar/golisper"
 
 type codeBlock struct {
-	code  []*golisper.Tag
+	code  []*golisper.Value
 	scope *Scope
 }
 
@@ -11,7 +11,7 @@ func (b *codeBlock) Type() string {
 	return "block"
 }
 
-func newBlock(scope *Scope, code []*golisper.Tag) *codeBlock {
+func newBlock(scope *Scope, code []*golisper.Value) *codeBlock {
 	return &codeBlock{code, scope}
 }
 
