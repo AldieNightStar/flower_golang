@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/flower",
-            "args": ["file.lsp"],
+            "args": ["fib.lsp"],
             "cwd": "${workspaceFolder}/flower"
         }
     ]

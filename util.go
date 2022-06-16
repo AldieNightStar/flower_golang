@@ -35,7 +35,7 @@ func EvalCast[T any](commandName string, s *Scope, val any, def T) (T, error) {
 	if o, ok := e.(T); ok {
 		return o, nil
 	}
-	return def, errWrongType(s.LastLine, commandName, val, def)
+	return def, errWrongType(s.LastLine, commandName, e, def)
 }
 
 func EvalCastMust[T any](commandName string, s *Scope, val any, def T) T {
@@ -56,7 +56,7 @@ func utilCodeFuncToSFunc(f *codeFunction) SFunc {
 		}
 		with := make(map[string]any)
 		for id, alias := range f.aliases {
-			evaledArg, err := f.scope.Eval(args[id])
+			evaledArg, err := s.Eval(args[id])
 			if err != nil {
 				return nil, err
 			}

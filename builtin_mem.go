@@ -60,13 +60,13 @@ func builtinMem(s *Scope) {
 	})
 	s.Memory["as"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {
-			return nil, errNotEnoughArgs(s.LastLine, "with", 2, len(args))
+			return nil, errNotEnoughArgs(s.LastLine, "as", 2, len(args))
 		}
 		val, err := s.Eval(args[0])
 		if err != nil {
 			return nil, err
 		}
-		block, err := EvalCast[*codeBlock]("with", s, args[1], nil)
+		block, err := EvalCast[*codeBlock]("as", s, args[1], nil)
 		if err != nil {
 			return nil, err
 		}
