@@ -2,6 +2,7 @@ package flower
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/AldieNightStar/golisper"
 )
@@ -45,6 +46,9 @@ func getTypeOf(a any) string {
 	}
 	if _, ok := a.(builtinIteration); ok {
 		return "iteration"
+	}
+	if _, ok := a.(*sync.Mutex); ok {
+		return "mutex"
 	}
 	return fmt.Sprintf("%T", a)
 }

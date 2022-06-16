@@ -379,6 +379,13 @@
 ; Run code block in another thread
 ; WARNING - errors will not be shown. You had to track them manualy with 'safe' command
 (thread (do ...))
+
+; Create mutex. Sync stuff
+(mutex)
+
+; Using mutex lock
+; Dont nest the same mutex inside. Use different to avoid dead lock
+(lock mut (do ...))
 ```
 
 # Sample
