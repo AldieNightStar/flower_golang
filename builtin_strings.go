@@ -3,6 +3,7 @@ package flower
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/AldieNightStar/golisper"
 )
@@ -116,7 +117,7 @@ func builtinString(s *Scope) {
 		for _, s := range strs {
 			arr = append(arr, s)
 		}
-		return &builtinList{arr}, nil
+		return &builtinList{arr, &sync.Mutex{}}, nil
 	})
 	str.m["find"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {

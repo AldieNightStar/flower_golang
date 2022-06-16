@@ -1,10 +1,15 @@
 package flower
 
+import "sync"
+
 type builtinBox struct {
 	value any
+	mut   *sync.Mutex
 }
 
 func (b *builtinBox) GetValue(name string) any {
+	b.mut.Lock()
+	defer b.mut.Unlock()
 	if name == "value" {
 		return b.value
 	}
@@ -12,6 +17,8 @@ func (b *builtinBox) GetValue(name string) any {
 }
 
 func (b *builtinBox) SetValue(name string, val any) bool {
+	b.mut.Lock()
+	defer b.mut.Unlock()
 	if name == "value" {
 		b.value = val
 		return true

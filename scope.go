@@ -2,6 +2,7 @@ package flower
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/AldieNightStar/golisper"
 )
@@ -13,14 +14,15 @@ func (f SFunc) Type() string {
 }
 
 type Scope struct {
-	Code       []*golisper.Value
-	Pos        int
-	Parent     *Scope
-	Memory     map[string]any
-	ReturnVal  any
-	WillReturn bool
-	IsEnded    bool
-	LastLine   int
+	Code        []*golisper.Value
+	Pos         int
+	Parent      *Scope
+	Memory      map[string]any
+	ReturnVal   any
+	WillReturn  bool
+	IsEnded     bool
+	LastLine    int
+	MemoryMutex *sync.Mutex
 }
 
 func NewScopeWithBuiltIns(code []*golisper.Value, Pos int) *Scope {
@@ -31,13 +33,14 @@ func NewScopeWithBuiltIns(code []*golisper.Value, Pos int) *Scope {
 
 func NewScope(Code []*golisper.Value, Pos int, Parent *Scope) *Scope {
 	return &Scope{
-		Code:       Code,
-		Pos:        Pos,
-		Parent:     Parent,
-		Memory:     make(map[string]any),
-		ReturnVal:  nil,
-		WillReturn: false,
-		IsEnded:    false,
+		Code:        Code,
+		Pos:         Pos,
+		Parent:      Parent,
+		Memory:      make(map[string]any),
+		ReturnVal:   nil,
+		WillReturn:  false,
+		IsEnded:     false,
+		MemoryMutex: &sync.Mutex{},
 	}
 }
 
@@ -52,6 +55,8 @@ func (s *Scope) Next() any {
 }
 
 func (s *Scope) GetFuncFromVariables(name string) SFunc {
+	s.MemoryMutex.Lock()
+	defer s.MemoryMutex.Unlock()
 	val, ok := s.Memory[name]
 	if !ok {
 		if s.Parent == nil {
@@ -66,6 +71,8 @@ func (s *Scope) GetFuncFromVariables(name string) SFunc {
 }
 
 func (s *Scope) GetVariableValue(name string) any {
+	s.MemoryMutex.Lock()
+	defer s.MemoryMutex.Unlock()
 	v, ok := s.Memory[name]
 	if !ok {
 		if s.Parent == nil {

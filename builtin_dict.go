@@ -3,6 +3,7 @@ package flower
 import (
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/AldieNightStar/golisper"
 )
@@ -10,9 +11,12 @@ import (
 type builtinDictStruct struct {
 	m     map[string]any
 	super *builtinDictStruct
+	mut   *sync.Mutex
 }
 
 func (d builtinDictStruct) String() string {
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	arr := make([]string, 0, 8)
 	for k, v := range d.m {
 		arr = append(arr, "["+k+"] = "+fmt.Sprint(v))
@@ -24,10 +28,13 @@ func newBuitinDict() *builtinDictStruct {
 	return &builtinDictStruct{
 		m:     make(map[string]any),
 		super: nil,
+		mut:   &sync.Mutex{},
 	}
 }
 
 func (d *builtinDictStruct) GetValue(name string) any {
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	val, ok := d.m[name]
 	if !ok {
 		// May be try to find in super dict
@@ -40,15 +47,21 @@ func (d *builtinDictStruct) GetValue(name string) any {
 }
 
 func (d *builtinDictStruct) SetValue(name string, val any) bool {
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	d.m[name] = val
 	return true
 }
 
 func (d *builtinDictStruct) Len() int {
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	return len(d.m)
 }
 
 func (d *builtinDictStruct) Type() string {
+	d.mut.Lock()
+	defer d.mut.Unlock()
 	return "dict"
 }
 
@@ -61,7 +74,7 @@ func builtinDict(s *Scope) {
 		}
 		ext := utilFindExtendsTag(evaled)
 		dict := utilCollectKeyValsToMap(evaled)
-		dictSturct := &builtinDictStruct{dict, nil}
+		dictSturct := &builtinDictStruct{dict, nil, &sync.Mutex{}}
 		if ext != nil {
 			dictSturct.super = ext.dict
 		}
@@ -134,6 +147,6 @@ func builtinDict(s *Scope) {
 			}
 			val = v
 		}
-		return &builtinBox{val}, nil
+		return &builtinBox{val, &sync.Mutex{}}, nil
 	})
 }

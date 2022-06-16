@@ -3,6 +3,7 @@ package flower
 import (
 	"io/ioutil"
 	"os"
+	"sync"
 
 	"github.com/AldieNightStar/golisper"
 )
@@ -81,7 +82,7 @@ func builtinFiles(s *Scope) {
 			dict.m["isfile"] = !d.IsDir()
 			arr = append(arr, dict)
 		}
-		return &builtinList{arr}, nil
+		return &builtinList{arr, &sync.Mutex{}}, nil
 	})
 	fs.m["import"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 1 {
@@ -111,7 +112,7 @@ func builtinFiles(s *Scope) {
 		for _, a := range os.Args[2:] {
 			arr = append(arr, a)
 		}
-		return &builtinList{arr}, nil
+		return &builtinList{arr, &sync.Mutex{}}, nil
 	})
 
 	s.Memory["fs"] = fs

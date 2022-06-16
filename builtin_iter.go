@@ -1,6 +1,8 @@
 package flower
 
 import (
+	"sync"
+
 	"github.com/AldieNightStar/golisper"
 )
 
@@ -101,7 +103,7 @@ func builtinIter(s *Scope) {
 		if err != nil {
 			return nil, err
 		}
-		arr := &builtinList{make([]any, 0, 32)}
+		arr := &builtinList{make([]any, 0, 32), &sync.Mutex{}}
 		for {
 			elem, err := iter.Iterate()
 			if err != nil {
@@ -110,7 +112,7 @@ func builtinIter(s *Scope) {
 			if elem == nil {
 				break
 			}
-			arr.list = append(arr.list, elem)
+			arr.Add(elem)
 		}
 		return arr, nil
 	})

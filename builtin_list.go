@@ -1,6 +1,10 @@
 package flower
 
-import "github.com/AldieNightStar/golisper"
+import (
+	"sync"
+
+	"github.com/AldieNightStar/golisper"
+)
 
 func builtinsList(s *Scope) {
 	listDict := newBuitinDict()
@@ -23,7 +27,7 @@ func builtinsList(s *Scope) {
 				arr = append(arr, elem)
 			}
 		}
-		return &builtinList{arr}, nil
+		return &builtinList{arr, &sync.Mutex{}}, nil
 	})
 	listDict.m["get"] = SFunc(func(s *Scope, args []*golisper.Value) (any, error) {
 		if len(args) < 2 {

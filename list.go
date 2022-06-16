@@ -3,10 +3,12 @@ package flower
 import (
 	"fmt"
 	"strings"
+	"sync"
 )
 
 type builtinList struct {
 	list []any
+	mut  *sync.Mutex
 }
 
 func (l *builtinList) Type() string {
@@ -14,10 +16,14 @@ func (l *builtinList) Type() string {
 }
 
 func (l *builtinList) Add(elem any) {
+	l.mut.Lock()
+	defer l.mut.Unlock()
 	l.list = append(l.list, elem)
 }
 
 func (l *builtinList) Get(id int) any {
+	l.mut.Lock()
+	defer l.mut.Unlock()
 	if id < 0 || id >= len(l.list) {
 		return nil
 	}
@@ -25,6 +31,8 @@ func (l *builtinList) Get(id int) any {
 }
 
 func (l *builtinList) Set(id int, val any) bool {
+	l.mut.Lock()
+	defer l.mut.Unlock()
 	if id < 0 || id >= len(l.list) {
 		return false
 	}
@@ -33,6 +41,8 @@ func (l *builtinList) Set(id int, val any) bool {
 }
 
 func (l *builtinList) Iteration() builtinIteration {
+	l.mut.Lock()
+	defer l.mut.Unlock()
 	return &builtinArrayIteration{l.list, 0}
 }
 
@@ -45,5 +55,7 @@ func (l builtinList) String() string {
 }
 
 func (l *builtinList) Len() int {
+	l.mut.Lock()
+	defer l.mut.Unlock()
 	return len(l.list)
 }
